@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AURA | Clinic Onboarding</title>
+<style>
+:root{--ink:#152536;--muted:#6c7d8d;--line:#e5ebf0;--bg:#f4f7fa;--card:#fff;--blue:#2368e8;--blue2:#eaf1ff;--teal:#14a89a;--shadow:0 12px 32px rgba(28,49,76,.08);--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.sidebar{background:#10263d;color:#fff;padding:24px 16px;display:flex;flex-direction:column;gap:26px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 10px}.brandmark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#67d9d0,#3275f3);display:grid;place-items:center;font-weight:900;color:#10263d;font-size:20px}.brand b{font-size:19px;letter-spacing:2px}.brand small{display:block;color:#a9bbcb;font-size:10px;letter-spacing:1.4px}
+.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;color:#c7d5e1;text-align:left;padding:12px 14px;border-radius:12px;display:flex;gap:12px;align-items:center}.nav button.active,.nav button:hover{background:#1d3b59;color:white}.nav .ico{width:20px;text-align:center;font-size:17px}.side-note{margin-top:auto;padding:14px;background:#193650;border:1px solid #2b4a66;border-radius:14px;color:#c7d5e1;font-size:11px}.side-note b{display:block;color:white;margin-bottom:5px}
+main{min-width:0;padding:28px 32px 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px}.eyebrow{font-size:10px;color:var(--blue);font-weight:800;letter-spacing:1.5px;text-transform:uppercase}.top h1{font-size:27px;line-height:1.2;margin:5px 0}.sub{color:var(--muted);font-size:13px}.admin{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}.avatar{width:36px;height:36px;border-radius:50%;background:#dce8ff;color:#2459bd;display:grid;place-items:center;font-weight:800}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.metric,.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.metric{padding:17px}.metric .label{color:var(--muted);font-size:12px}.metric strong{display:block;font-size:27px;margin:8px 0 2px;letter-spacing:-.7px}.metric small{color:var(--muted);font-size:11px}.metric .dot{float:right;width:9px;height:9px;border-radius:50%;background:var(--teal);margin-top:4px}
+.layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(330px,.95fr);gap:18px;align-items:start}.panel{padding:20px;margin-bottom:18px}.panelhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:17px}.panel h2{font-size:16px;margin:0}.panelhead p{color:var(--muted);font-size:11px;margin:4px 0 0}.tag{background:#edf6f5;color:#168276;border-radius:30px;padding:5px 9px;font-size:10px;font-weight:800}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#526477;font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid #dce4eb;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#7ca4f6;box-shadow:0 0 0 3px #eaf1ff}.field textarea{min-height:68px;resize:vertical}
+.btn{border:1px solid #dce4eb;background:white;color:#33475b;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:750}.btn:hover{background:#f7f9fb}.btn.primary{background:var(--blue);border-color:var(--blue);color:white}.btn.primary:hover{background:#1558d4}.btn.soft{background:var(--blue2);border-color:var(--blue2);color:#2459bd}.btn.danger{color:#b43d3d}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.helper{font-size:10px;color:var(--muted);line-height:1.5;margin-top:8px}
+.list{display:grid;gap:10px}.clinic{border:1px solid var(--line);border-radius:13px;padding:13px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}.clinic b{font-size:13px}.clinic small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.clinic .actions{margin:0;justify-content:flex-end}.clinic .actions button{padding:7px 9px;font-size:10px}
+.empty{padding:24px 12px;text-align:center;color:var(--muted);font-size:12px;border:1px dashed #d8e1e9;border-radius:12px}
+.notice{background:#fff8e8;border:1px solid #f4e4bd;color:#7e5b17;padding:12px 13px;border-radius:12px;font-size:11px;line-height:1.5}
+.linkbox{background:#f5f8fc;border:1px solid #e1e9f2;border-radius:12px;padding:12px;word-break:break-all;font-size:11px;color:#2459bd}
+.modalback{position:fixed;inset:0;background:#0c203b88;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modalback.show{display:flex}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:white;border-radius:18px;padding:22px;box-shadow:0 24px 80px #0c203b55}.modal h2{margin:0 0 7px;font-size:18px}.modal p{margin:0 0 15px;color:var(--muted);font-size:12px}.modalclose{float:right;border:0;background:#f0f3f7;border-radius:50%;width:30px;height:30px}
+.page{display:none}.page.active{display:block}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:700px){.shell{grid-template-columns:1fr}.sidebar{padding:13px;gap:12px}.brand{padding:0 4px}.nav{grid-template-columns:repeat(3,1fr)}.nav button{justify-content:center;padding:9px 5px;font-size:10px;gap:5px;flex-direction:column}.side-note{display:none}main{padding:20px 14px 36px}.top{align-items:flex-start}.top h1{font-size:23px}.admin span{display:none}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.clinic{grid-template-columns:1fr}.clinic .actions{justify-content:flex-start}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+ <div class="brand"><div class="brandmark">A</div><div><b>AURA</b><small>CLINIC NETWORK</small></div></div>
+ <nav class="nav">
+  <button class="active" data-page="overview"><span class="ico">▦</span>Overview</button>
+  <button data-page="onboard"><span class="ico">＋</span>Onboard clinic</button>
+  <button data-page="clinics"><span class="ico">⌂</span>Clinics</button>
+ </nav>
+ <div class="side-note"><b>Network admin</b>Onboard each clinic, create its unique enquiry entry point and prepare the website button link.</div>
+</aside>
+<main>
+ <header class="top"><div><div class="eyebrow">AURA · Network administration</div><h1 id="pageTitle">Clinic onboarding overview</h1><div class="sub" id="pageSub">Manage clinic accounts and individual enquiry entry points.</div></div><div class="admin"><div class="avatar">A</div><span>Platform administrator</span></div></header>
+
+ <section class="page active" id="overview">
+  <div class="cards">
+   <div class="metric"><span class="dot"></span><div class="label">Clinics onboarded</div><strong id="metricClinics">0</strong><small>Saved in this browser</small></div>
+   <div class="metric"><div class="label">Enquiry links created</div><strong id="metricLinks">0</strong><small>Unique clinic links</small></div>
+   <div class="metric"><div class="label">Active clinics</div><strong id="metricActive">0</strong><small>Enabled clinic profiles</small></div>
+   <div class="metric"><div class="label">Specialties covered</div><strong id="metricSpecialties">0</strong><small>Distinct specialties</small></div>
+  </div>
+  <div class="layout">
+   <div class="panel"><div class="panelhead"><div><h2>Recently onboarded clinics</h2><p>Latest clinic profiles added to AURA.</p></div><button class="btn soft" onclick="showPage('clinics')">View all</button></div><div id="recentClinics" class="list"></div></div>
+   <div class="panel"><div class="panelhead"><div><h2>Onboarding workflow</h2><p>From clinic registration to website enquiry.</p></div><span class="tag">3 steps</span></div>
+    <div class="health-step"><b>01 · Register clinic</b><div class="helper">Enter clinic name, owner, contact information, location and specialty.</div></div>
+    <div class="health-step" style="margin-top:14px"><b>02 · Create login credentials</b><div class="helper">Set the clinic login email and generate a temporary password for first access.</div></div>
+    <div class="health-step" style="margin-top:14px"><b>03 · Generate enquiry entry point</b><div class="helper">Create a clinic-specific enquiry page and download its website link or embed button snippet.</div></div>
+    <div class="notice" style="margin-top:18px">Prototype note: this standalone demo saves clinic profiles in this browser only. Production login, central database, public URLs and enquiry delivery require a secure backend and hosting.</div>
+   </div>
+  </div>
+ </section>
+
+ <section class="page" id="onboard">
+  <div class="layout">
+   <div class="panel">
+    <div class="panelhead"><div><h2>Onboard a new clinic</h2><p>Enter the clinic's basic details to create its AURA profile.</p></div><span class="tag">New clinic</span></div>
+    <form id="clinicForm">
+     <div class="formgrid">
+      <div class="field full"><label>Clinic / practice name *</label><input name="clinicName" required placeholder="e.g. Aura Dental Care"></div>
+      <div class="field"><label>Doctor / owner name *</label><input name="owner" required placeholder="Dr. Full Name"></div>
+      <div class="field"><label>Specialty *</label><select name="specialty" required><option value="">Select specialty</option><option>Dental</option><option>Dermatology</option><option>General Practice</option><option>Cardiology</option><option>Orthopaedics</option><option>Paediatrics</option><option>Gynaecology</option><option>ENT</option><option>Ophthalmology</option><option>Physiotherapy</option><option>Multi-specialty</option><option>Other</option></select></div>
+      <div class="field"><label>Clinic phone / WhatsApp *</label><input name="phone" type="tel" required placeholder="+91 98765 43210"></div>
+      <div class="field"><label>Clinic email *</label><input name="email" type="email" required placeholder="clinic@example.com"></div>
+      <div class="field"><label>City *</label><input name="city" required placeholder="City"></div>
+      <div class="field"><label>Website (optional)</label><input name="website" type="url" placeholder="https://"></div>
+      <div class="field full"><label>Clinic address *</label><textarea name="address" required placeholder="Full clinic address"></textarea></div>
+      <div class="field"><label>Login username / email *</label><input name="login" type="email" required placeholder="admin@clinic.com"></div>
+      <div class="field"><label>Temporary password *</label><div style="display:flex;gap:7px"><input name="password" id="tempPassword" required minlength="10" placeholder="Generate a secure password" style="min-width:0"><button type="button" class="btn" onclick="generatePassword()">Generate</button></div></div>
+     </div>
+     <div class="helper">Use a clinic-controlled email for login. The temporary password is shown only once after creation; it is not stored in this browser demo.</div>
+     <div class="actions"><button class="btn primary" type="submit">Create clinic profile</button><button class="btn" type="reset">Clear form</button></div>
+    </form>
+   </div>
+   <div>
+    <div class="panel"><div class="panelhead"><div><h2>After onboarding</h2><p>What the platform admin can download.</p></div></div>
+     <div class="health-step"><b>Clinic-specific enquiry page</b><div class="helper">A standalone HTML enquiry form branded with that clinic's name and contact details.</div></div>
+     <div class="health-step" style="margin-top:14px"><b>Website button snippet</b><div class="helper">A ready-to-copy button or iframe snippet for the website's “Enquiry Now” area.</div></div>
+     <div class="health-step" style="margin-top:14px"><b>Clinic access details</b><div class="helper">Download the username and temporary password to share securely with the clinic owner.</div></div>
+    </div>
+    <div class="notice">Security: this is a front-end prototype, not a production authentication system. Do not use real patient data or real passwords in this demo.</div>
+   </div>
+  </div>
+ </section>
+
+ <section class="page" id="clinics">
+  <div class="panel">
+   <div class="panelhead"><div><h2>Clinic directory</h2><p>Open a clinic to generate its unique enquiry page and website integration files.</p></div><button class="btn primary" onclick="showPage('onboard')">＋ Onboard clinic</button></div>
+   <div class="field" style="max-width:330px;margin-bottom:15px"><label>Search clinics</label><input id="clinicSearch" placeholder="Search by clinic, owner, city or specialty" oninput="renderClinics()"></div>
+   <div id="clinicList" class="list"></div>
+  </div>
+ </section>
+</main>
+</div>
+
+<div class="modalback" id="modalBack" onclick="if(event.target===this)closeModal()"><div class="modal"><button class="modalclose" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+<script>
+const STORE='aura_network_onboarding_v1';
+let clinics=load();
+let lastCredential=null;
+function load(){try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch(e){return []}}
+function persist(){localStorage.setItem(STORE,JSON.stringify(clinics));renderAll()}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function slugify(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+function id(){return 'cln_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
+function generatePassword(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';let out='';const bytes=new Uint32Array(16);crypto.getRandomValues(bytes);for(let i=0;i<16;i++)out+=chars[bytes[i]%chars.length];document.getElementById('tempPassword').value=out}
+function showPage(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const meta={overview:['Clinic onboarding overview','Manage clinic accounts and individual enquiry entry points.'],onboard:['Onboard a clinic','Create a clinic profile and its login access.'],clinics:['Clinic directory','Manage clinic profiles and generate enquiry downloads.']}[page];document.getElementById('pageTitle').textContent=meta[0];document.getElementById('pageSub').textContent=meta[1];if(page==='clinics')renderClinics()}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.getElementById('clinicForm').addEventListener('submit',e=>{
+ e.preventDefault();const f=new FormData(e.currentTarget),v=Object.fromEntries(f.entries());
+ if(clinics.some(c=>c.login.toLowerCase()===v.login.toLowerCase())){alert('This login email is already used by another clinic.');return}
+ const clinic={id:id(),slug:slugify(v.clinicName)+'-'+Math.random().toString(36).slice(2,6),clinicName:v.clinicName.trim(),owner:v.owner.trim(),specialty:v.specialty,phone:v.phone.trim(),email:v.email.trim(),city:v.city.trim(),website:v.website.trim(),address:v.address.trim(),login:v.login.trim(),demoPassword:v.password,accountStatus:'Active',createdAt:new Date().toISOString(),active:true,linkGenerated:true};
+ const password=v.password;clinics.unshift(clinic);lastCredential={clinicName:clinic.clinicName,login:clinic.login,password};
+ persist();e.currentTarget.reset();openCredentialModal(clinic,lastCredential);showPage('clinics');
+});
+function appBase(){return location.protocol==='file:'?'https://YOUR-AURA-DOMAIN':location.origin}
+function doctorUrl(c){return `${appBase()}/clinic/?clinic=${encodeURIComponent(c.slug)}`}
+function enquiryUrl(c){return `${appBase()}/book/?clinic=${encodeURIComponent(c.slug)}`}
+function openCredentialModal(c,cred){const durl=doctorUrl(c),eurl=enquiryUrl(c);openModal(`<div class="eyebrow">Clinic created · Doctor account active</div><h2>${esc(c.clinicName)} is ready on AURA</h2><p><span class="tag">ACTIVE</span> The doctor account is activated immediately in this onboarding demo.</p><div class="linkbox"><b>Doctor dashboard login link</b><br><span>${esc(durl)}</span><br><br><b>Doctor username</b><br>${esc(cred.login)}<br><br><b>Temporary password</b><br>${esc(cred.password)}<br><br><b>Patient enquiry link</b><br>${esc(eurl)}</div><div class="actions"><button class="btn primary" onclick="copyText('${durl}')">Copy doctor link</button><button class="btn soft" onclick="copyText('${eurl}')">Copy enquiry link</button><button class="btn" onclick="downloadCredentials('${c.id}')">Download credentials</button></div><div class="helper">Demo limitation: credentials are stored in this browser so the demo login can validate them. This is not secure production authentication. Use Supabase Auth before sharing real credentials.</div>`)}
+function openModal(content){document.getElementById('modalContent').innerHTML=content;document.getElementById('modalBack').classList.add('show')}
+function closeModal(){document.getElementById('modalBack').classList.remove('show')}
+function download(name,content,type='text/html'){const blob=new Blob([content],{type:type+';charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function downloadCredentials(cid){const c=clinics.find(x=>x.id===cid);if(!c)return;download(slugify(c.clinicName)+'-aura-access.txt',`AURA CLINIC ACCESS DETAILS\nClinic: ${c.clinicName}\nAccount status: ${c.accountStatus||'Active'}\nDoctor dashboard: ${doctorUrl(c)}\nUsername: ${c.login}\nTemporary password: ${c.demoPassword||lastCredential?.password||'Regenerate in production'}\nPatient enquiry: ${enquiryUrl(c)}\n\nChange the temporary password after first sign-in.\nDEMO ONLY: this prototype stores credentials in browser localStorage. Do not use real patient data.\n`,'text/plain')}
+function enquiryPage(c){const data=JSON.stringify({name:c.clinicName,phone:c.phone,city:c.city,owner:c.owner,specialty:c.specialty,id:c.id}).replace(/</g,'\\u003c');return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Enquiry | ${esc(c.clinicName)}</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fb;color:#172b40;font:15px/1.5 Arial,sans-serif;padding:24px}.wrap{max-width:520px;margin:30px auto;background:#fff;border-radius:18px;padding:26px;box-shadow:0 12px 40px #18375a14}.brand{color:#2368e8;font-weight:800;letter-spacing:1px;font-size:12px}.clinic{font-size:25px;margin:8px 0 4px}.muted{color:#687b8d;font-size:13px;margin-bottom:20px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:12px;font-weight:700}.field input,.field textarea,.field select{padding:12px;border:1px solid #dce5ed;border-radius:9px;font:inherit;width:100%}.field textarea{min-height:76px}.btn{width:100%;border:0;border-radius:10px;padding:13px;background:#2368e8;color:#fff;font-weight:800;font-size:14px;cursor:pointer}.foot{font-size:11px;color:#748394;margin-top:15px} </style></head><body><main class="wrap"><div class="brand">AURA · APPOINTMENT ENQUIRY</div><h1 class="clinic" id="clinicName"></h1><div class="muted" id="clinicInfo"></div><form id="enquiry"><div class="field"><label>Your name *</label><input name="patient" required placeholder="Enter your name"></div><div class="field"><label>Mobile number *</label><input name="mobile" required type="tel" placeholder="Your contact number"></div><div class="field"><label>Service / treatment interested in</label><input name="service" placeholder="What would you like help with?"></div><div class="field"><label>Preferred date</label><input name="date" type="date"></div><div class="field"><label>Message</label><textarea name="message" placeholder="Tell us briefly how we can help"></textarea></div><button class="btn" type="submit">Send enquiry on WhatsApp</button></form><div class="foot">Your enquiry will open as a WhatsApp message to the clinic. Review and press Send in WhatsApp.</div></main><script>const clinic=${data};document.getElementById('clinicName').textContent=clinic.name;document.getElementById('clinicInfo').textContent=clinic.specialty+' · '+clinic.city;document.getElementById('enquiry').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);const msg='New website enquiry for '+clinic.name+'%0AName: '+encodeURIComponent(f.get('patient'))+'%0AMobile: '+encodeURIComponent(f.get('mobile'))+'%0AService: '+encodeURIComponent(f.get('service')||'Not specified')+'%0APreferred date: '+encodeURIComponent(f.get('date')||'Not specified')+'%0AMessage: '+encodeURIComponent(f.get('message')||'None');const phone=clinic.phone.replace(/\\D/g,'');if(!phone){alert('Clinic WhatsApp number is missing.');return}window.open('https://wa.me/'+phone+'?text='+msg,'_blank')});<\/script></body></html>`}
+function openClinic(cid){const c=clinics.find(x=>x.id===cid);if(!c)return;const durl=doctorUrl(c),eurl=enquiryUrl(c);openModal(`<div class="eyebrow">Clinic access & links</div><h2>${esc(c.clinicName)}</h2><p><span class="tag">${esc(c.accountStatus||'Active')}</span> Doctor account status</p><div class="field"><label>Doctor dashboard login</label><div class="linkbox">${esc(durl)}</div></div><div class="field"><label>Patient enquiry link</label><div class="linkbox">${esc(eurl)}</div></div><div class="actions"><button class="btn primary" onclick="copyText('${durl}')">Copy doctor link</button><button class="btn soft" onclick="copyText('${eurl}')">Copy enquiry link</button><button class="btn" onclick="downloadCredentials('${c.id}')">Download access details</button><button class="btn" onclick="downloadEnquiry('${c.id}')">Download enquiry HTML</button></div><div class="helper">Links use this deployment's domain. This prototype relies on browser localStorage; production multi-device access requires Supabase Auth and a shared database.</div>`);c.linkGenerated=true;persist()}
+function downloadEnquiry(cid){const c=clinics.find(x=>x.id===cid);if(!c)return;download(slugify(c.clinicName)+'-enquiry.html',enquiryPage(c));}
+function downloadEmbed(cid){const c=clinics.find(x=>x.id===cid);if(!c)return;const url=enquiryUrl(c);const code=`<!-- AURA enquiry button for ${c.clinicName} -->\n<a href="${url}" class="aura-enquiry-button" target="_blank" rel="noopener">Enquiry Now</a>\n<style>.aura-enquiry-button{display:inline-block;padding:12px 22px;border-radius:8px;background:#2368e8;color:#fff;text-decoration:none;font:600 14px Arial,sans-serif}</style>\n<!-- Replace YOUR-AURA-DOMAIN with the domain where the clinic enquiry page is hosted. -->`;download(slugify(c.clinicName)+'-website-enquiry-button.html',code,'text/plain')}
+async function copyText(t){try{await navigator.clipboard.writeText(t);alert('Copied.')}catch(e){prompt('Copy this link:',t)}}
+function renderClinicCard(c){return `<div class="clinic"><div><b>${esc(c.clinicName)}</b><small>${esc(c.owner)} · ${esc(c.specialty)} · ${esc(c.city)}</small><small>${esc(c.email)} · ${esc(c.phone)}</small></div><div class="actions"><button class="btn soft" onclick="openClinic('${c.id}')">Access & links</button><button class="btn" onclick="toggleClinic('${c.id}')">${c.active?'Active':'Inactive'}</button></div></div>`}
+function renderClinics(){const q=(document.getElementById('clinicSearch')?.value||'').toLowerCase();const filtered=clinics.filter(c=>[c.clinicName,c.owner,c.city,c.specialty,c.email].join(' ').toLowerCase().includes(q));document.getElementById('clinicList').innerHTML=filtered.length?filtered.map(renderClinicCard).join(''):'<div class="empty">No clinics found. Onboard your first clinic to get started.</div>'}
+function toggleClinic(cid){const c=clinics.find(x=>x.id===cid);if(!c)return;c.active=!c.active;persist();renderClinics()}
+function renderAll(){document.getElementById('metricClinics').textContent=clinics.length;document.getElementById('metricLinks').textContent=clinics.filter(c=>c.linkGenerated).length;document.getElementById('metricActive').textContent=clinics.filter(c=>c.active).length;document.getElementById('metricSpecialties').textContent=new Set(clinics.map(c=>c.specialty)).size;document.getElementById('recentClinics').innerHTML=clinics.length?clinics.slice(0,5).map(renderClinicCard).join(''):'<div class="empty">No clinics onboarded yet. Select “Onboard clinic” to create the first clinic profile.</div>';renderClinics()}
+renderAll();
+</script>
+</body>
+</html>

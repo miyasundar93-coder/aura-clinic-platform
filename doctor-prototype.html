@@ -1,0 +1,1324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AURA | Doctor Practice Management</title>
+<style>
+:root{--primary:#087f8c;--primary-light:#e8f6f6;--navy:#183849;--bg:#f4f7f9;--white:#fff;--text:#203442;--muted:#758591;--border:#e3eaee;--green:#16845b;--amber:#b7791f;--red:#c34b55;--shadow:0 5px 20px rgba(24,56,73,.055)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:225px;background:var(--navy);color:white;padding:25px 15px;display:flex;flex-direction:column;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px;padding:0 10px 30px}
+.logo{width:39px;height:39px;border-radius:12px;background:#bce9e6;color:#075e69;display:grid;place-items:center;font-weight:bold;font-size:22px}
+.brand b{font-size:21px;letter-spacing:2px}.brand small{display:block;color:#b8cbd2;font-size:10px;letter-spacing:1px;margin-top:3px}
+.nav{display:grid;gap:7px}.nav button{background:none;border:0;color:#c5d5dc;text-align:left;padding:13px;border-radius:9px}
+.nav button.active,.nav button:hover{background:#2d5365;color:white}.nav button span{display:inline-block;width:28px;font-size:17px}
+.sidefoot{margin-top:auto;padding:13px;border:1px solid #426273;border-radius:10px;color:#c5d5dc;font-size:11px;line-height:1.7}.sidefoot b{color:white}
+main{flex:1;min-width:0}.topbar{height:70px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}
+.topbar small{color:var(--muted)}.topbar h3{margin:3px 0;font-size:17px}.doctor{display:flex;align-items:center;gap:10px}
+.avatar{width:37px;height:37px;border-radius:50%;background:#dff1f1;color:var(--primary);display:grid;place-items:center;font-weight:bold}.doctor small{display:block}
+.content{padding:25px 28px 90px;max-width:1500px;margin:auto}.page{display:none}.page.active{display:block}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.heading h1{font-size:24px;margin:0 0 5px}
+.muted{color:var(--muted)}.small{font-size:11px}
+.btn{padding:9px 13px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font-weight:600}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:white}.btn.soft{background:var(--primary-light);border-color:#d1e9e9;color:#086c77}
+.btn.danger{color:var(--red)}.btn.sm{padding:6px 9px;font-size:11px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:17px}.two{grid-template-columns:1.4fr 1fr}.three{grid-template-columns:repeat(3,1fr)}
+.card{background:white;border:1px solid var(--border);border-radius:13px;padding:16px;box-shadow:var(--shadow);min-width:0}
+.statlabel{font-size:12px;color:var(--muted);font-weight:600}.statnum{font-size:26px;font-weight:bold;margin:9px 0 3px}
+.statfoot{font-size:11px;color:var(--muted)}.staticon{float:right;width:34px;height:34px;border-radius:10px;background:var(--primary-light);color:var(--primary);display:grid;place-items:center;font-size:17px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}.sectionhead h3{font-size:15px;margin:0}.sectionhead small{color:var(--muted)}
+.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}
+th{text-align:left;font-size:10px;color:var(--muted);padding:10px 8px;border-bottom:1px solid var(--border)}
+td{font-size:12px;padding:11px 8px;border-bottom:1px solid #eef2f4}tr:last-child td{border-bottom:0}
+.pill{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:bold;background:#edf1f3;color:#566976}
+.pill.Confirmed,.pill.Completed,.pill.Paid,.pill.Verified,.pill.Open,.pill.Active{background:#e5f5eb;color:#18734e}
+.pill.Followup,.pill.Pending,.pill.Partial{background:#fff3dd;color:#96620c}
+.pill.Cancelled,.pill.Overdue,.pill.Inactive{background:#fdebed;color:#ad3d48}
+.pill.Rescheduled,.pill.Verification{background:#e9f1fb;color:#386a9c}
+.patientname{font-weight:bold}.field{display:grid;gap:5px;margin-bottom:12px}
+.field label{font-size:11px;font-weight:bold;color:#536574}
+.field input,.field select,.field textarea,.toolbar input,.toolbar select{width:100%;min-width:0;padding:9px 10px;border:1px solid #dce5e9;border-radius:8px;background:white;color:var(--text);outline:none}
+.field textarea{min-height:75px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary)}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 13px}.span2{grid-column:span 2}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:13px}.toolbar input{max-width:260px}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.quick button{text-align:left;background:white;border:1px solid var(--border);border-radius:9px;padding:12px;font-weight:bold;color:var(--text)}
+.quick small{display:block;color:var(--muted);font-weight:normal;margin-top:4px}
+.task{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid #edf1f3}.task:last-child{border:0}
+.dot{width:8px;height:8px;border-radius:50%;background:#d69b32;margin-top:5px;flex-shrink:0}
+.taskcontent{flex:1;min-width:0}.taskcontent b{font-size:12px;display:block}.taskcontent small{color:var(--muted);font-size:11px}
+.empty{text-align:center;color:var(--muted);padding:22px;font-size:12px}
+.notice{padding:11px;background:#eef8f9;border:1px solid #d5ebec;border-radius:8px;font-size:12px;color:#38616b;margin:10px 0}
+.modalback{display:none;position:fixed;inset:0;background:#102b3a99;z-index:20;align-items:center;justify-content:center;padding:15px}
+.modalback.show{display:flex}.modal{background:white;width:min(760px,100%);max-height:94vh;overflow:auto;border-radius:15px;padding:21px;box-shadow:0 20px 60px #0003}
+.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.modalhead h2{font-size:19px;margin:0}
+.close{border:0;background:#edf2f4;border-radius:8px;width:32px;height:32px;font-size:19px}
+.recordgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.info{background:#f6f9fa;border-radius:9px;padding:11px;overflow-wrap:anywhere}
+.info small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.info b{font-size:12px}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.dayname{text-align:center;color:var(--muted);font-size:10px;padding:6px}
+.day{min-height:65px;border:1px solid var(--border);border-radius:7px;background:white;text-align:left;padding:5px;font-size:11px}
+.day.today{border-color:var(--primary);background:#effafa}.day.selected{box-shadow:inset 0 0 0 1px var(--primary)}
+.day em{display:block;font-style:normal;color:var(--primary);font-size:9px;margin-top:5px}
+.calendarhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.barrow{display:grid;grid-template-columns:100px 1fr 35px;gap:8px;align-items:center;margin:13px 0;font-size:11px}
+.bar{height:9px;background:#edf2f4;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:#26969b;border-radius:20px}
+.chart{height:145px;display:flex;align-items:end;gap:10px;border-bottom:1px solid var(--border);padding-top:10px}
+.chartcol{height:100%;flex:1;display:flex;align-items:center;justify-content:end;flex-direction:column;gap:5px}
+.chartcol i{width:65%;max-width:32px;min-height:2px;background:#4aa6a7;border-radius:5px 5px 0 0}
+.chartcol small,.chartcol b{font-size:9px;color:var(--muted)}
+/* MANAGE TAB STYLES */
+.switch{position:relative;display:inline-block;width:42px;height:23px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cbd5da;border-radius:30px;transition:.2s;cursor:pointer}
+.slider:before{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}
+.switch input:checked+.slider{background:var(--primary)}
+.switch input:checked+.slider:before{transform:translateX(19px)}
+.manage-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #edf1f3}
+.manage-row:last-child{border-bottom:0}.manage-main{min-width:0;flex:1}
+.manage-main b{display:block;font-size:13px}.manage-main small{display:block;color:var(--muted);margin-top:4px;font-size:11px}
+.manage-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.day-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}
+.slot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.slot-card{border:1px solid var(--border);border-radius:9px;padding:11px;display:flex;align-items:center;justify-content:space-between;gap:7px}
+.slot-card b{font-size:12px}.slot-card small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+/* MESSAGING TAB */
+.message-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.message-card{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fff;box-shadow:var(--shadow)}
+.message-card h3{font-size:15px;margin:0 0 6px}.message-card p{font-size:11px;color:var(--muted);line-height:1.5;min-height:34px;margin:0 0 12px}
+.message-count{font-size:25px;font-weight:bold;color:var(--navy);margin:7px 0}
+.message-list{display:grid;gap:8px}.message-recipient{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px;border:1px solid var(--border);border-radius:9px}
+.message-recipient>div{min-width:0}.message-recipient b{display:block;font-size:12px}.message-recipient small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+@media(max-width:650px){.message-grid{grid-template-columns:1fr}.message-recipient{align-items:flex-start;flex-direction:column}}
+
+/* PATIENT FEEDBACK ANALYTICS */
+.rating-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.rating-number{font-size:30px;font-weight:bold;margin:7px 0;color:var(--navy)}
+.stars{color:#e4a72e;letter-spacing:2px;font-size:17px;white-space:nowrap}
+.rating-muted{color:var(--muted);font-size:11px}
+.star-row{display:grid;grid-template-columns:45px 1fr 32px;gap:9px;align-items:center;margin:9px 0;font-size:11px}
+.star-track{height:9px;background:#edf2f4;border-radius:20px;overflow:hidden}
+.star-track i{display:block;height:100%;background:#e4a72e;border-radius:20px}
+.feedback-list{display:grid;gap:8px}
+.feedback-item{border:1px solid var(--border);border-radius:9px;padding:10px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.feedback-item p{margin:5px 0 0;font-size:12px;color:#536574;overflow-wrap:anywhere}
+@media(max-width:650px){.rating-grid{grid-template-columns:1fr}.feedback-item{flex-direction:column}}
+@media(max-width:950px){.sidebar{width:190px}.stats{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
+@media(max-width:650px){
+ .sidebar{display:none}.topbar{height:60px;padding:0 14px}.doctor .details{display:none}
+ .content{padding:18px 13px 95px}.heading h1{font-size:21px}.heading{align-items:flex-start}
+ .stats{gap:9px}.card{padding:13px}.statnum{font-size:23px}
+ .formgrid,.recordgrid{grid-template-columns:1fr}.span2{grid-column:auto}
+ .mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:10;background:white;border-top:1px solid var(--border);justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+ .mobilebar button{border:0;background:none;color:var(--muted);font-size:10px;display:grid;gap:3px;justify-items:center}
+ .mobilebar button.active{color:var(--primary);font-weight:bold}.mobilebar span{font-size:18px}
+ .toolbar>*{flex:1}.toolbar input{max-width:none}.day{min-height:55px}
+ .day-grid{grid-template-columns:1fr}.slot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* AURA UPGRADE */
+.glance-actions{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:12px;margin:0 0 14px}
+.glance-actions button{display:grid;gap:3px;text-align:left;padding:14px 16px;border-radius:13px;border:1px solid var(--border);background:#fff;color:var(--text);box-shadow:var(--shadow)}
+.glance-actions button span{font-size:20px}.glance-actions button b{font-size:14px}.glance-actions button small{color:var(--muted);font-size:11px}
+.glance-actions button:disabled{opacity:.5;cursor:default}
+.glance-actions .sosbtn{background:var(--red);border-color:var(--red);color:#fff}.glance-actions .sosbtn small{color:#ffe3e5}
+.chip{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:bold;margin:0 6px 6px 0}
+.chip.g{background:#e5f5eb;color:#18734e}.chip.a{background:#fff3dd;color:#96620c}.chip.r{background:#fdebed;color:#ad3d48}
+.kpi-ok .statnum{color:var(--green)}.kpi-warn .statnum{color:var(--amber)}.kpi-bad .statnum{color:var(--red)}
+.voicebar{height:9px;border-radius:20px;overflow:hidden;display:flex;background:#edf2f4;margin:6px 0 10px}.voicebar i{display:block;height:100%}
+.fixitem{font-size:12px;color:#536574;padding:6px 0;border-top:1px solid #edf1f3}
+@media(max-width:650px){.glance-actions{grid-template-columns:1fr}}
+.vbox{max-height:250px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:10px;background:#fafcfd}
+.visit{border-left:3px solid var(--primary);padding:2px 0 2px 11px;margin:0 0 12px}
+.visit:last-child{margin-bottom:0}.vhead{font-size:12px;margin-bottom:5px}
+.vrow{display:grid;grid-template-columns:130px 1fr;gap:8px;font-size:12px;padding:2px 0}.vrow small{color:var(--muted);font-size:11px;padding-top:1px}
+.vrow.hl span{background:#fff3dd;color:#6d4608;padding:3px 7px;border-radius:6px}
+.lastplan{background:#eef8f9;border:1px solid #d5ebec;border-radius:9px;padding:9px 11px;font-size:12px;margin-bottom:10px;color:#24525c}
+@media(max-width:650px){.vrow{grid-template-columns:1fr;gap:1px}}
+.subtabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}.subtabs button{border:1px solid var(--border);background:white;color:var(--text);padding:9px 13px;border-radius:20px;font-weight:600}.subtabs button b{display:inline-block;min-width:20px;margin-left:5px;padding:1px 6px;border-radius:12px;background:#edf1f3;color:#566976;font-size:11px;text-align:center}.subtabs button.active{background:var(--primary);border-color:var(--primary);color:white}.subtabs button.active b{background:#ffffff33;color:white}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+ <div class="brand"><div class="logo">A</div><div><b>AURA</b><small>DOCTOR PRACTICE</small></div></div>
+ <nav class="nav">
+  <button class="active" data-tab="overview"><span>⌂</span>Overview</button>
+  <button data-tab="appointments"><span>▦</span>Appointments</button>
+  <button data-tab="patients"><span>☺</span>Patients</button>
+  <button data-tab="analytics"><span>▥</span>Analytics</button>
+  <button data-tab="messaging"><span>✉</span>Messaging</button>
+  <button data-tab="templates"><span>✎</span>Message templates</button>
+  <button data-tab="manage"><span>⚙</span>Manage</button>
+ </nav>
+ <div class="sidefoot"><b>Single-doctor workspace</b>One doctor · One practice<br>Data stays in this browser. Back it up in Manage.</div>
+</aside>
+<main>
+<header class="topbar">
+ <div><small>AURA / <span id="crumb">Overview</span></small><h3 id="topTitle">Good afternoon, Doctor</h3></div>
+ <div class="doctor"><div class="avatar">DR</div><div class="details"><b>Dr. Arjun Mehta</b><small>General Physician</small></div></div>
+</header>
+<div class="content">
+
+<!-- OVERVIEW -->
+<section class="page active" id="overview">
+ <div class="heading"><div><h1>Practice overview</h1><div class="muted" id="todayLabel"></div></div><button class="btn primary" onclick="openAppointment()">＋ New appointment</button></div>
+ <div class="grid stats" id="overviewStats"></div>
+ <div id="glance"></div>
+ <div class="grid two">
+  <div class="card"><div class="sectionhead"><h3>Today's schedule</h3><small id="todayCount"></small></div>
+   <div class="tablewrap"><table><thead><tr><th>TIME</th><th>PATIENT</th><th>SERVICE</th><th>STATUS</th><th></th></tr></thead><tbody id="todayRows"></tbody></table></div>
+  </div>
+  <div class="grid">
+   <div class="card"><div class="sectionhead"><h3>Pending tasks</h3><small id="taskCount"></small></div><div id="taskList"></div></div>
+   <div class="card"><div class="sectionhead"><h3>Quick actions</h3></div><div class="quick">
+    <button onclick="openPatient()">＋ Add patient<small>Register a new patient</small></button>
+    <button onclick="openAppointment()">▦ Book appointment<small>Create a new booking</small></button>
+    <button onclick="switchTab('appointments')">♡ Patient records<small>Find patient history</small></button>
+    <button onclick="switchTab('analytics')">▥ View analytics<small>Practice performance</small></button>
+   </div></div>
+  </div>
+ </div>
+ <div class="grid two" style="margin-top:14px">
+  <div class="card"><div class="sectionhead"><h3>Upcoming follow-ups</h3><small>Next 14 days</small></div><div id="followupList"></div></div>
+ </div>
+</section>
+
+<!-- APPOINTMENTS -->
+<section class="page" id="appointments">
+ <div class="heading"><div><h1>Appointments & patients</h1><div class="muted">Manage bookings and continuous patient records.</div></div>
+ <div class="actions"><button class="btn" onclick="openPatient()">＋ Patient</button><button class="btn primary" onclick="openAppointment()">＋ Appointment</button></div></div>
+ <div class="grid stats" id="apptStats"></div>
+ <div class="grid two">
+  <div class="card"><div class="calendarhead"><div><b id="monthTitle"></b><div class="muted small">Select a date to filter appointments</div></div>
+   <div class="actions"><button class="btn sm" onclick="changeMonth(-1)">‹</button><button class="btn sm" onclick="goToday()">Today</button><button class="btn sm" onclick="changeMonth(1)">›</button></div>
+  </div><div class="calendar" id="calendar"></div></div>
+  <div class="card"><div class="sectionhead"><h3>Patient directory</h3><small id="patientCount"></small></div>
+   <div class="toolbar"><input id="patientSearch" placeholder="Search patient, phone or ID…" oninput="renderPatients()"></div>
+   <div class="tablewrap"><table><thead><tr><th>PATIENT</th><th>PHONE</th><th>VISITS</th><th></th></tr></thead><tbody id="patientRows"></tbody></table></div>
+  </div>
+ </div>
+ <div class="card" style="margin-top:14px"><div class="sectionhead"><h3 id="appointmentListTitle">All appointments</h3><small id="apptListCount"></small></div>
+  <div class="toolbar"><input id="apptSearch" placeholder="Search patient or service…" oninput="renderAppointments()">
+   <select id="statusFilter" onchange="renderAppointments()"><option value="">All statuses</option><option>Confirmed</option><option>Rescheduled</option><option>Followup</option><option>Overdue</option><option>Completed</option><option>Cancelled</option></select>
+   <button class="btn sm" onclick="clearDateFilter()">Clear date filter</button>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>DATE / TIME</th><th>PATIENT</th><th>SERVICE</th><th>FEE</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="apptRows"></tbody></table></div>
+ </div>
+</section>
+
+<!-- PATIENTS -->
+<section class="page" id="patients">
+ <div class="heading"><div><h1>Patients</h1><div class="muted">Group patients by status and send WhatsApp messages to each group.</div></div><div class="actions"><button class="btn" onclick="openPatient()">＋ Patient</button><button class="btn primary" onclick="openAppointment()">＋ Appointment</button></div></div>
+ <div class="subtabs" id="ptTabs"></div>
+ <div class="grid stats" id="ptCards"></div>
+ <div class="card">
+  <div class="sectionhead"><div><h3 id="ptTitle"></h3><small id="ptSub"></small></div><div class="actions"><button class="btn primary sm" id="ptAll" onclick="ptSendAll()">Send all pending</button></div></div>
+  <div class="toolbar"><input id="ptSearch" placeholder="Search name, phone or ID…" oninput="renderPatientsTab()"></div>
+  <div class="notice" id="ptHint"></div>
+  <div class="tablewrap"><table><thead><tr><th>PATIENT</th><th>PHONE</th><th>LAST VISIT</th><th>DETAIL</th><th>STATUS</th><th>MESSAGE</th><th>ACTION</th></tr></thead><tbody id="ptRows"></tbody></table></div>
+ </div>
+</section>
+
+<!-- ANALYTICS -->
+<section class="page" id="analytics">
+ <div class="heading"><div><h1>Practice analytics</h1><div class="muted">Calculated from your appointment and payment records.</div></div>
+ <select id="analyticsRange" class="btn" onchange="renderAnalytics()"><option value="all">All time</option><option value="month">This month</option><option value="week">This week</option><option value="today">Today</option></select></div>
+ <div class="grid stats" id="analyticsStats"></div>
+ <div class="grid two">
+  <div class="card"><div class="sectionhead"><h3>Appointment outcomes</h3><small>Selected period</small></div><div id="outcomeBars"></div></div>
+  <div class="card"><div class="sectionhead"><h3>Revenue trend</h3><small>Verified collections</small></div><div class="chart" id="revenueChart"></div><div class="muted small" style="margin-top:10px">Only verified payments count as collected revenue.</div></div>
+ </div>
+ <div class="grid two" style="margin-top:14px">
+  <div class="card"><div class="sectionhead"><h3>Service performance</h3></div><div class="tablewrap"><table><thead><tr><th>SERVICE</th><th>BOOKINGS</th><th>COMPLETED</th><th>COLLECTED</th></tr></thead><tbody id="serviceRows"></tbody></table></div></div>
+  <div class="card"><div class="sectionhead"><h3>Patient insights</h3></div><div id="patientInsights"></div></div>
+ </div>
+ <div class="sectionhead" style="margin-top:22px;align-items:center"><div><h2 style="font-size:18px;margin:0 0 4px">Patient ratings & feedback</h2><div class="muted small">Based on feedback recorded for completed visits in the selected period.</div></div><button class="btn primary" onclick="openFeedbackForm()">＋ Record feedback</button></div>
+ <div class="rating-grid" id="ratingSummary"></div>
+ <div class="card" id="svcInsight" style="margin-top:14px"></div>
+ <div class="grid two" style="margin-top:14px">
+  <div class="card"><div class="sectionhead"><h3>Star distribution</h3><small id="ratingCountLabel"></small></div><div id="starDistribution"></div></div>
+  <div class="card"><div class="sectionhead"><h3>Service rating</h3><small>Average score by service</small></div><div class="tablewrap"><table><thead><tr><th>SERVICE</th><th>AVG. RATING</th><th>REVIEWS</th><th>POSITIVE</th></tr></thead><tbody id="serviceRatingRows"></tbody></table></div></div>
+ </div>
+ <div class="card" style="margin-top:14px"><div class="sectionhead"><h3>Recent patient feedback</h3><small id="feedbackCountLabel"></small></div><div id="feedbackList" class="feedback-list"></div></div>
+</section>
+
+
+<!-- MESSAGING -->
+<section class="page" id="messaging">
+ <div class="heading"><div><h1>Patient messaging</h1><div class="muted">Prepare personalised WhatsApp messages for the right patient group.</div></div></div>
+ <div class="card" style="margin-bottom:14px">
+  <div class="sectionhead"><h3>Feedback link</h3><small>Used in daily completion messages</small></div>
+  <div class="toolbar" style="margin-bottom:0"><input id="feedbackLinkInput" type="url" placeholder="Paste your patient feedback form / review link" style="max-width:520px"><button class="btn primary" onclick="saveFeedbackLink()">Save link</button></div>
+  <div class="muted small" style="margin-top:8px">Add your clinic's feedback form link. AURA will include it in completion messages.</div>
+ </div>
+ <div class="message-grid">
+  <div class="message-card"><h3>1. Daily completion</h3><p>Patients whose appointments were marked completed today. Sends a caring message with your feedback link.</p><div class="message-count" id="msgCountCompleted">0</div><div class="muted small" style="margin-bottom:12px">Completed today</div><button class="btn primary" onclick="prepareBroadcast('completed')">Prepare completion messages</button></div>
+  <div class="message-card"><h3>2. Follow-up</h3><p>Patients marked for follow-up, using the follow-up date saved in their appointment record.</p><div class="message-count" id="msgCountFollowup">0</div><div class="muted small" style="margin-bottom:12px">Follow-up patients</div><button class="btn primary" onclick="prepareBroadcast('followup')">Prepare follow-up messages</button></div>
+  <div class="message-card"><h3>3. Overdue</h3><p>Patients with an overdue follow-up date or a confirmed/rescheduled appointment date that has passed.</p><div class="message-count" id="msgCountOverdue">0</div><div class="muted small" style="margin-bottom:12px">Overdue patients</div><button class="btn primary" onclick="prepareBroadcast('overdue')">Prepare overdue messages</button></div>
+  <div class="message-card"><h3>4. 24 hours before scheduled time</h3><p>Confirmed or rescheduled appointments scheduled within the next 24 hours.</p><div class="message-count" id="msgCountReminder">0</div><div class="muted small" style="margin-bottom:12px">Upcoming appointments</div><button class="btn primary" onclick="prepareBroadcast('reminder')">Prepare 24-hour reminders</button></div>
+ </div>
+ <div class="card" style="margin-top:14px">
+  <div class="sectionhead"><div><h3 id="messageBatchTitle">Message recipients</h3><small id="messageBatchCount">Choose a message group above</small></div><div class="actions"><button class="btn primary sm" onclick="msgSendAll()">Send all</button><button class="btn sm" onclick="clearBroadcast()">Clear list</button></div></div>
+  <div class="notice">AURA creates an individual personalised WhatsApp draft for each patient. Open each draft, review it and press Send in WhatsApp. This standalone demo does not automatically send or schedule messages.</div>
+  <div id="messageRecipientList" class="message-list"><div class="empty">Select one of the four message groups above to prepare drafts.</div></div>
+ </div>
+</section>
+
+
+<!-- MESSAGE TEMPLATES -->
+<section class="page" id="templates">
+ <div class="heading"><div><h1>Message templates</h1><div class="muted">Edit the wording once. AURA will use your saved templates for individual patient WhatsApp drafts and broadcasts.</div></div>
+  <div class="actions"><button class="btn" onclick="resetMessageTemplates()">Restore defaults</button><button class="btn primary" onclick="saveMessageTemplates()">Save all templates</button></div>
+ </div>
+ <div class="notice" style="margin-bottom:14px">
+  **Personalisation placeholders:** <code>{patient_name}</code>, <code>{doctor_name}</code>, <code>{appointment_date}</code>, <code>{appointment_time}</code>, <code>{service}</code>, <code>{followup_date}</code>, <code>{feedback_link}</code>. AURA replaces these separately for each patient and appointment when preparing the draft.
+ </div>
+ <div class="grid two">
+  <div class="card"><div class="sectionhead"><h3>Appointment messages</h3><small>Used from patient / appointment records</small></div>
+   <div class="field"><label>Appointment confirmation</label><textarea id="tpl_appointmentConfirmation" rows="4"></textarea></div>
+   <div class="field"><label>Appointment reminder</label><textarea id="tpl_appointmentReminder" rows="4"></textarea></div>
+   <div class="field"><label>Follow-up reminder</label><textarea id="tpl_followupReminder" rows="4"></textarea></div>
+   <div class="field"><label>Cancellation</label><textarea id="tpl_cancellation" rows="4"></textarea></div>
+   <div class="field"><label>Doctor emergency</label><textarea id="tpl_doctorEmergency" rows="5"></textarea></div>
+   <div class="field"><label>Rescheduling</label><textarea id="tpl_rescheduling" rows="4"></textarea></div>
+   <div class="field"><label>Treatment completion</label><textarea id="tpl_treatmentCompletion" rows="4"></textarea></div>
+   <div class="field"><label>Custom message starter</label><textarea id="tpl_custom" rows="3"></textarea></div>
+  </div>
+  <div class="card"><div class="sectionhead"><h3>Broadcast messages</h3><small>Used in the Messaging tab</small></div>
+   <div class="field"><label>Daily completion + caring message + feedback link</label><textarea id="tpl_dailyCompletion" rows="5"></textarea></div>
+   <div class="field"><label>Follow-up broadcast</label><textarea id="tpl_broadcastFollowup" rows="5"></textarea></div>
+   <div class="field"><label>Overdue broadcast</label><textarea id="tpl_overdue" rows="5"></textarea></div>
+   <div class="field"><label>24-hour appointment reminder</label><textarea id="tpl_reminder24h" rows="5"></textarea></div>
+   <div class="field"><label>Tomorrow’s reminder · placeholders: {patient_name} {visit_type} {visit_date} {visit_time} {reason}</label><textarea id="tpl_tomorrowReminder" rows="6"></textarea></div>
+  </div>
+ </div>
+ <div class="actions" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="resetMessageTemplates()">Restore defaults</button><button class="btn primary" onclick="saveMessageTemplates()">Save all templates</button></div>
+ <div class="muted small" style="margin-top:9px">Templates are saved in this browser with the AURA practice data. Changes apply to newly prepared drafts; drafts already open or prepared are not retroactively changed.</div>
+</section>
+
+<!-- MANAGE -->
+<section class="page" id="manage">
+ <div class="heading"><div><h1>Manage practice</h1><div class="muted">Configure services, appointment timings and working days.</div></div>
+  <button class="btn primary" onclick="openServiceForm()">＋ Add service</button>
+ </div>
+ <div class="grid stats" id="manageStats"></div>
+ <div class="card" style="margin-bottom:14px"><div class="sectionhead"><h3>Backup &amp; fresh start</h3><small>Free · your data stays in this browser only</small></div>
+  <div class="notice">After each day, press Create backup and paste the text somewhere safe (WhatsApp “Message yourself”, email or a note). If browser data is ever cleared, paste it back and press Restore.</div>
+  <textarea id="backupBox" style="width:100%;min-height:80px;padding:9px;border:1px solid var(--border);border-radius:8px;font:12px monospace" placeholder="Backup text appears here. To restore, paste a backup here and press Restore."></textarea>
+  <div class="actions" style="margin-top:10px"><button class="btn primary" onclick="backupMake()">Create backup</button><button class="btn" onclick="backupRestore()">Restore from text</button><button class="btn danger" onclick="clearDemo()">Delete all sample data</button></div>
+ </div>
+
+ <div class="grid two">
+  <div class="card">
+   <div class="sectionhead"><h3>Services & treatments</h3><small>Service availability</small></div>
+   <div class="notice">Switch a service OFF to stop new bookings. Existing appointment records are retained.</div>
+   <div id="serviceManageList"></div>
+   <div style="margin-top:14px"><button class="btn primary" onclick="openServiceForm()">＋ Add new service</button></div>
+  </div>
+  <div class="card">
+   <div class="sectionhead"><h3>Working days</h3><small>Weekly availability</small></div>
+   <div class="notice">Switch a day OFF to prevent new appointments on that day. Existing appointments are not deleted.</div>
+   <div id="dayManageList"></div>
+  </div>
+ </div>
+
+ <div class="card" style="margin-top:14px">
+  <div class="sectionhead"><h3>Appointment time slots</h3><small>One-hour appointment slots</small></div>
+  <div class="notice">Each time slot can be enabled or disabled independently. Disabled slots will not appear when booking an appointment.</div>
+  <div class="actions" style="margin-bottom:14px">
+   <button type="button" class="btn primary" onclick="openSlotForm()">＋ Add time slot</button>
+   <button class="btn" onclick="resetSlots()">Restore default hourly slots</button>
+  </div>
+  <div class="slot-grid" id="slotManageList"></div>
+ </div>
+ <div class="notice" style="margin-top:14px">Changes made here are saved in this browser and immediately affect the appointment booking form. This demo does not synchronise settings across devices.</div>
+</section>
+</div>
+</main>
+</div>
+
+<nav class="mobilebar">
+ <button class="active" data-tab="overview"><span>⌂</span>Overview</button>
+ <button data-tab="appointments"><span>▦</span>Appointments</button>
+  <button data-tab="patients"><span>☺</span>Patients</button>
+ <button data-tab="analytics"><span>▥</span>Analytics</button>
+ <button data-tab="messaging"><span>✉</span>Messages</button>
+ <button data-tab="templates"><span>✎</span>Templates</button>
+ <button data-tab="manage"><span>⚙</span>Manage</button>
+</nav>
+
+<div class="modalback" id="modal"><div class="modal">
+ <div class="modalhead"><h2 id="modalTitle"></h2><button class="close" onclick="closeModal()">×</button></div>
+ <div id="modalBody"></div>
+</div></div>
+
+<script>
+/* ==========================================================
+ AURA SINGLE DOCTOR — SHARED DATA + LOCAL STORAGE
+========================================================== */
+const $=id=>document.getElementById(id);
+const today=new Date();
+const iso=d=>{let x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const plus=(d,n)=>{let x=new Date(d);x.setDate(x.getDate()+n);return x};
+const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const seedDate=iso(today);
+const defaultServices=[
+ {id:'SV-1',name:'General consultation',fee:700,active:true},
+ {id:'SV-2',name:'Follow-up consultation',fee:400,active:true},
+ {id:'SV-3',name:'Diabetes review',fee:900,active:true},
+ {id:'SV-4',name:'BP consultation',fee:600,active:true},
+ {id:'SV-5',name:'Preventive health check',fee:1200,active:true}
+];
+const defaultDays=[
+ {name:'Monday',active:true},{name:'Tuesday',active:true},
+ {name:'Wednesday',active:true},{name:'Thursday',active:true},
+ {name:'Friday',active:true},{name:'Saturday',active:true},
+ {name:'Sunday',active:false}
+];
+function defaultSlots(){
+ let out=[];
+ for(let h=9;h<=17;h++)out.push({time:String(h).padStart(2,'0')+':00',active:true});
+ return out;
+}
+function initialData(){
+ let p=[
+ {id:'AU-1001',name:'Priya Sharma',phone:'9876543210',email:'priya@example.com',dob:'1992-04-12',gender:'Female',address:'Adyar, Chennai',history:'Occasional migraine',allergies:'None known',emergency:'9876500001',created:seedDate},
+ {id:'AU-1002',name:'Rahul Nair',phone:'9840012345',email:'rahul@example.com',dob:'1985-09-21',gender:'Male',address:'Velachery, Chennai',history:'Type 2 diabetes',allergies:'Penicillin',emergency:'9840099999',created:seedDate},
+ {id:'AU-1003',name:'Meena Krishnan',phone:'9003012345',email:'meena@example.com',dob:'1978-02-03',gender:'Female',address:'Mylapore, Chennai',history:'Hypertension',allergies:'None known',emergency:'9003099999',created:seedDate},
+ {id:'AU-1004',name:'Aravind Kumar',phone:'9884012345',email:'aravind@example.com',dob:'2000-11-18',gender:'Male',address:'T Nagar, Chennai',history:'No known medical history',allergies:'Dust',emergency:'9884099999',created:seedDate}
+ ];
+ let a=[
+ {id:'AP-2001',patientId:p[0].id,date:seedDate,time:'09:00',service:'General consultation',duration:60,fee:700,discount:10,status:'Confirmed',notes:'Headache review',historyNote:'',followup:'',reason:'',payment:{received:700,verified:700,method:'UPI',status:'Paid'},created:seedDate},
+ {id:'AP-2002',patientId:p[1].id,date:seedDate,time:'10:00',service:'Diabetes review',duration:60,fee:900,discount:0,status:'Followup',notes:'Review glucose readings',historyNote:'Type 2 diabetes — ongoing monitoring',followup:iso(plus(today,7)),reason:'',payment:{received:500,verified:500,method:'Cash',status:'Partial'},created:seedDate},
+ {id:'AP-2003',patientId:p[2].id,date:seedDate,time:'11:00',service:'BP consultation',duration:60,fee:600,discount:5,status:'Completed',notes:'BP review and lifestyle advice',historyNote:'Continue current tablet; reduce salt',diagnosis:'Hypertension, controlled',advice:'Continue current tablet; reduce salt',plan:'Review 2-week home BP log at next visit',followup:'',reason:'',payment:{received:600,verified:600,method:'UPI',status:'Paid'},created:seedDate},
+ {id:'AP-2004',patientId:p[3].id,date:iso(plus(today,1)),time:'16:00',service:'General consultation',duration:60,fee:700,status:'Confirmed',notes:'New patient visit',historyNote:'',followup:'',reason:'',payment:{received:0,verified:0,method:'',status:'Pending'},created:seedDate},
+ {id:'AP-2007',patientId:p[0].id,date:iso(plus(today,-30)),time:'11:00',service:'General consultation',duration:60,fee:700,discount:0,status:'Completed',notes:'Severe headache with flashing lights',diagnosis:'Migraine with aura, new onset',advice:'Started preventive medicine; keep a trigger diary',plan:'Review response in 4 weeks; MRI if symptoms worsen',historyNote:'Started preventive medicine; keep a trigger diary',followup:'',reason:'',payment:{received:700,verified:700,method:'UPI',status:'Paid'},created:seedDate},
+ {id:'AP-2008',patientId:p[2].id,date:iso(plus(today,-14)),time:'11:00',service:'BP consultation',duration:60,fee:600,discount:0,status:'Followup',notes:'BP re-check after medication change',diagnosis:'Hypertension, medication adjusted',advice:'New tablet dose; reduce salt',plan:'Review home BP log',historyNote:'New tablet dose; reduce salt',followup:iso(plus(today,1)),reason:'',payment:{received:600,verified:600,method:'UPI',status:'Paid'},created:seedDate},
+ {id:'AP-2006',patientId:p[3].id,date:iso(plus(today,-6)),time:'10:00',service:'Preventive health check',duration:60,fee:1200,discount:25,status:'Followup',notes:'Blood report review',diagnosis:'Borderline high cholesterol on routine panel',advice:'Diet change, 30 minutes walking daily, repeat lipid profile',plan:'Check repeat lipid profile; start medicine if LDL still high',historyNote:'',followup:iso(plus(today,-3)),reason:'',payment:{received:900,verified:900,method:'UPI',status:'Paid'},created:seedDate},
+ {id:'AP-2005',patientId:p[0].id,date:iso(plus(today,-2)),time:'12:00',service:'Follow-up consultation',duration:60,fee:400,discount:0,status:'Completed',notes:'Symptoms improved',historyNote:'Continue prescribed medication; avoid screen strain; sleep 7-8 hours',diagnosis:'Migraine, improving on treatment',advice:'Continue prescribed medication; avoid screen strain; sleep 7-8 hours',plan:'Ask about attack frequency; reduce dose if headache-free for 2 weeks',followup:'',reason:'',payment:{received:400,verified:400,method:'UPI',status:'Paid'},created:seedDate}
+ ];
+ let feedback=[
+  {id:'FB-3001',appointmentId:'AP-2001',patientId:p[0].id,service:'General consultation',rating:5,comment:'Clear explanation and helpful advice.',date:seedDate},
+  {id:'FB-3002',appointmentId:'AP-2002',patientId:p[1].id,service:'Diabetes review',rating:4,comment:'Good follow-up and practical guidance.',date:seedDate},
+  {id:'FB-3003',appointmentId:'AP-2003',patientId:p[2].id,service:'BP consultation',rating:3,comment:'Visit was fine; waiting time could improve.',date:seedDate},
+  {id:'FB-3005',appointmentId:'AP-2006',patientId:p[3].id,service:'Preventive health check',rating:2,comment:'Report came late and the waiting time was long.',date:iso(plus(today,-5))},
+  {id:'FB-3004',appointmentId:'AP-2005',patientId:p[0].id,service:'Follow-up consultation',rating:2,comment:'Would appreciate a shorter waiting time.',date:iso(plus(today,-2))}
+ ];
+ return {patients:p,appointments:a,feedback,selectedDate:seedDate,settings:{services:defaultServices,days:defaultDays,slots:defaultSlots()}};
+}
+let db;
+try{
+ db=JSON.parse(localStorage.getItem('aura_single_doctor_v4'))||initialData();
+}catch(e){db=initialData()}
+function ensureSettings(){
+ if(!db.settings)db.settings={};
+
+function defaultMessageTemplates(){
+ return {
+  appointmentConfirmation:"Hello {patient_name}, your appointment with {doctor_name} is confirmed for {appointment_date} at {appointment_time}. Service: {service}. Thank you.",
+  appointmentReminder:"Hello {patient_name}, this is a reminder for your appointment with {doctor_name} on {appointment_date} at {appointment_time}. We look forward to seeing you.",
+  followupReminder:"Hello {patient_name}, this is a reminder for your follow-up consultation on {followup_date}. Please contact the clinic if you need to reschedule.",
+  cancellation:"Hello {patient_name}, your appointment on {appointment_date} at {appointment_time} has been cancelled. Please contact the clinic to arrange another appointment.",
+  doctorEmergency:"Hello {patient_name}, due to an unexpected emergency, {doctor_name} will be unable to attend your appointment scheduled for {appointment_date} at {appointment_time} ({service}). We sincerely apologise for the inconvenience. Please reply to this message or contact the clinic so we can arrange a new appointment at a convenient time. Thank you for your understanding.\n\nAURA Clinic",
+  rescheduling:"Hello {patient_name}, we would like to reschedule your appointment originally planned for {appointment_date} at {appointment_time}. Please contact the clinic to confirm a convenient time.",
+  treatmentCompletion:"Hello {patient_name}, your consultation / treatment visit has been marked complete. Please follow the advice provided by {doctor_name}.",
+  custom:"Hello {patient_name}, ",
+  dailyCompletion:"Hello {patient_name}, thank you for visiting {doctor_name} on {appointment_date} for {service}. We hope you are feeling well. Please take care and follow the advice shared during your visit.\n\nWe would appreciate your feedback: {feedback_link}\n\nWishing you good health,\nAURA Clinic",
+  broadcastFollowup:"Hello {patient_name}, this is a gentle reminder for your follow-up for {service} with {doctor_name} on {followup_date}. Please contact us if you need any assistance or would like to reschedule.\n\nWishing you good health,\nAURA Clinic",
+  overdue:"Hello {patient_name}, our records show that your follow-up / appointment for {service} with {doctor_name} due on {followup_date} is pending. Please contact the clinic to arrange a convenient visit. If you have already attended, kindly ignore this message.\n\nAURA Clinic",
+  tomorrowReminder:"Hello {patient_name}, this is a reminder from AURA Clinic. You have a {visit_type} with {doctor_name} tomorrow, {visit_date}, at {visit_time}.\n\nReason: {reason}\n\nPlease reply YES to confirm, or tell us if you need to reschedule. Thank you.",
+  reminder24h:"Hello {patient_name}, this is a reminder of your appointment for {service} with {doctor_name} on {appointment_date} at {appointment_time}. We look forward to seeing you. If you need to reschedule, please contact the clinic.\n\nAURA Clinic"
+ };
+}
+
+ if(typeof db.settings.feedbackLink!=='string')db.settings.feedbackLink='';
+ if(typeof db.settings.contactPerson!=='string')db.settings.contactPerson='';
+ if(!db.settings.messageTemplates||typeof db.settings.messageTemplates!=='object')db.settings.messageTemplates={};
+ db.settings.messageTemplates={...defaultMessageTemplates(),...db.settings.messageTemplates};
+ if(!Array.isArray(db.settings.services))db.settings.services=defaultServices.map(x=>({...x}));
+ if(!Array.isArray(db.settings.days))db.settings.days=defaultDays.map(x=>({...x}));
+ if(!Array.isArray(db.settings.slots))db.settings.slots=defaultSlots();
+ db.settings.services=db.settings.services.map((s,i)=>({...s,id:s.id||'SV-'+(i+1),active:s.active!==false}));
+ db.settings.days=db.settings.days.map(d=>({...d,active:d.active!==false}));
+ db.settings.slots=db.settings.slots.map(s=>({...s,active:s.active!==false}));
+}
+if(!Array.isArray(db.feedback))db.feedback=[];
+if(!db.sent||typeof db.sent!=='object')db.sent={};
+ensureSettings();
+function save(){localStorage.setItem('aura_single_doctor_v4',JSON.stringify(db));renderAll()}
+function patient(id){return db.patients.find(p=>p.id===id)}
+function nextId(prefix,list){return prefix+'-'+String(Math.max(0,...list.map(x=>Number(x.id.split('-')[1])||0))+1)}
+function pill(s){return `<span class="pill ${safe(s)}">${safe(s)}</span>`}
+function openModal(title,html){$('modalTitle').textContent=title;$('modalBody').innerHTML=html;$('modal').classList.add('show')}
+function closeModal(){$('modal').classList.remove('show')}
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+
+/* MESSAGE TEMPLATE EDITOR + PERSONALISATION */
+const templateFields=[
+ ['appointmentConfirmation','Appointment confirmation'],
+ ['appointmentReminder','Appointment reminder'],
+ ['followupReminder','Follow-up reminder'],
+ ['cancellation','Cancellation'],
+ ['doctorEmergency','Doctor emergency'],
+ ['rescheduling','Rescheduling'],
+ ['treatmentCompletion','Treatment completion'],
+ ['custom','Custom message starter'],
+ ['dailyCompletion','Daily completion broadcast'],
+ ['broadcastFollowup','Follow-up broadcast'],
+ ['overdue','Overdue broadcast'],
+ ['reminder24h','24-hour appointment reminder'],
+ ['tomorrowReminder','Tomorrow’s reminder (name + reason)']
+];
+function renderMessageTemplates(){
+ if(!$('templates'))return;
+ templateFields.forEach(([key])=>{const el=$('tpl_'+key);if(el)el.value=db.settings.messageTemplates[key]??defaultMessageTemplates()[key]});
+}
+function saveMessageTemplates(){
+ templateFields.forEach(([key])=>{const el=$('tpl_'+key);if(el)db.settings.messageTemplates[key]=el.value});
+ localStorage.setItem('aura_single_doctor_v4',JSON.stringify(db));
+ alert('Message templates saved. Newly prepared WhatsApp drafts will use the updated wording.');
+}
+function resetMessageTemplates(){
+ if(!confirm('Restore all message templates to the AURA default wording?'))return;
+ db.settings.messageTemplates=defaultMessageTemplates();
+ localStorage.setItem('aura_single_doctor_v4',JSON.stringify(db));
+ renderMessageTemplates();
+ alert('Default message templates restored.');
+}
+function fillMessageTemplate(key,values){
+ const template=db.settings.messageTemplates?.[key]??defaultMessageTemplates()[key]??'';
+ return String(template).replace(/\{([a-z_]+)\}/gi,(whole,token)=>{
+  const value=values[token];
+  return value===undefined||value===null?'':String(value);
+ });
+}
+function appointmentTemplateValues(a,p){
+ return {
+  patient_name:(p?.name||'Patient').trim(),
+  doctor_name:'Dr. Arjun Mehta',
+  appointment_date:waDisplayDate(a?.date||''),
+  appointment_time:a?.time||'',
+  service:a?.service||'',
+  followup_date:waDisplayDate(a?.followup||a?.date||''),
+  feedback_link:(db.settings.feedbackLink||'').trim()
+ };
+}
+
+/* NAVIGATION */
+function switchTab(tab){
+ document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===tab));
+ document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));
+ $('crumb').textContent=tab[0].toUpperCase()+tab.slice(1);
+ $('topTitle').textContent=tab==='overview'?greet():tab==='appointments'?'Appointments & patients':tab==='patients'?'Patients':tab==='manage'?'Manage practice':tab==='messaging'?'Patient messaging':tab==='templates'?'Message templates':'Practice analytics';
+ renderAll();if(tab==='templates')renderMessageTemplates();window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+
+/* PATIENT REGISTRATION */
+function openPatient(){
+ openModal('Register new patient',`
+ <form id="patientForm"><div class="formgrid">
+ <div class="field"><label>Full name *</label><input name="name" required></div>
+ <div class="field"><label>Mobile number *</label><input name="phone" required pattern="[0-9+ -]{8,15}"></div>
+ <div class="field"><label>Email</label><input name="email" type="email"></div>
+ <div class="field"><label>Date of birth</label><input name="dob" type="date"></div>
+ <div class="field"><label>Gender</label><select name="gender"><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></div>
+ <div class="field"><label>Emergency contact</label><input name="emergency"></div>
+ <div class="field span2"><label>Address</label><input name="address"></div>
+ <div class="field span2"><label>Medical history</label><textarea name="history" placeholder="Existing conditions and relevant history"></textarea></div>
+ <div class="field span2"><label>Allergies</label><input name="allergies" placeholder="Enter allergies or None known"></div>
+ </div><div class="actions"><button class="btn primary">Save patient</button><button type="button" class="btn" onclick="closeModal()">Cancel</button></div></form>`);
+ $('patientForm').onsubmit=e=>{
+  e.preventDefault();let f=new FormData(e.target),phone=f.get('phone').trim();
+  if(db.patients.some(p=>p.phone===phone)){alert('A patient with this mobile number already exists. Open the existing patient record.');return}
+  db.patients.push({id:nextId('AU',db.patients),name:f.get('name').trim(),phone,email:f.get('email'),dob:f.get('dob'),gender:f.get('gender'),emergency:f.get('emergency'),address:f.get('address'),history:f.get('history'),allergies:f.get('allergies')||'Not recorded',created:iso(today)});
+  closeModal();save();switchTab('appointments');
+ };
+}
+
+/* BOOKING — USES MANAGE SETTINGS */
+function activeServices(){return db.settings.services.filter(s=>s.active)}
+function activeSlots(){return db.settings.slots.filter(s=>s.active).sort((a,b)=>a.time.localeCompare(b.time))}
+function dayEnabled(date){
+ let day=new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
+ return db.settings.days.some(d=>d.name===day&&d.active);
+}
+function openAppointment(){
+ if(!activeServices().length){alert('No active services. Go to Manage and switch on at least one service.');return}
+ if(!activeSlots().length){alert('No active appointment time slots. Go to Manage and enable a time slot.');return}
+ let serviceOptions=activeServices().map(s=>`<option value="${safe(s.id)}">${safe(s.name)}</option>`).join('');
+ openModal('New appointment · enquiry',`
+ <form id="appointmentForm"><div class="formgrid">
+  <div class="field"><label>Name *</label><input name="name" id="enqName" required autocomplete="off"></div>
+  <div class="field"><label>Mobile *</label><input name="phone" id="enqPhone" required inputmode="tel" pattern="[0-9+ -]{8,15}"><small class="muted" id="enqHint"></small></div>
+  <div class="field span2"><label>Service *</label><select name="serviceId" id="enqService" required>${serviceOptions}</select></div>
+  <div class="field span2"><label>Problem / reason</label><textarea name="notes" placeholder="What is the patient’s problem?"></textarea></div>
+  <div class="field"><label>Day *</label><input name="date" id="enqDate" type="date" value="${iso(today)}" required><div class="actions" style="margin-top:6px"><button type="button" class="btn sm" id="enqToday">Today</button><button type="button" class="btn sm" id="enqTomorrow">Tomorrow</button></div></div>
+  <div class="field"><label>Time *</label><select name="time" id="enqTime" required></select></div>
+ </div><div id="enqNote" class="notice"></div>
+ <label style="display:flex;gap:8px;align-items:center;font-size:12px;margin:0 0 12px"><input type="checkbox" id="enqWA" style="width:auto"> Open WhatsApp confirmation after saving</label>
+ <div class="actions"><button class="btn primary">Save appointment</button><button type="button" class="btn" onclick="closeModal()">Cancel</button></div></form>`);
+ function refresh(){
+  let d=$('enqDate').value,cur=$('enqTime').value,booked=db.appointments.filter(a=>a.date===d&&a.status!=='Cancelled').map(a=>a.time);
+  $('enqTime').innerHTML=activeSlots().map(s=>`<option value="${s.time}">${formatTime(s.time)}${booked.includes(s.time)?' · booked':''}</option>`).join('');
+  if(cur)$('enqTime').value=cur;
+  let nm=d?new Date(d+'T12:00:00').toLocaleDateString('en-IN',{weekday:'long'}):'';
+  $('enqNote').textContent=!d?'':dayEnabled(d)?nm+' is a working day.':nm+' is OFF in Manage. Please choose another day.';
+ }
+ function find(){let n=$('enqPhone').value.replace(/\D/g,'').slice(-10);return n.length>=8?db.patients.find(p=>String(p.phone).replace(/\D/g,'').slice(-10)===n):null}
+ $('enqPhone').oninput=()=>{let p=find();$('enqHint').textContent=p?'Existing patient: '+p.name+' ('+p.id+')':($('enqPhone').value?'New patient will be added':'');if(p&&!$('enqName').value)$('enqName').value=p.name};
+ $('enqDate').onchange=refresh;
+ $('enqToday').onclick=()=>{$('enqDate').value=iso(today);refresh()};
+ $('enqTomorrow').onclick=()=>{$('enqDate').value=iso(plus(today,1));refresh()};
+ refresh();
+ $('appointmentForm').onsubmit=e=>{
+  e.preventDefault();let f=new FormData(e.target),date=f.get('date'),time=f.get('time'),service=db.settings.services.find(s=>s.id===f.get('serviceId'));
+  if(!dayEnabled(date)){alert('This working day is OFF. Please choose another day.');return}
+  if(!service||!service.active){alert('This service is no longer active. Select another service.');return}
+  if(!db.settings.slots.some(s=>s.time===time&&s.active)){alert('This time slot is OFF. Please choose an active time slot.');return}
+  let conflict=db.appointments.some(a=>a.date===date&&a.time===time&&a.status!=='Cancelled');
+  if(conflict&&!confirm('There is already an appointment at this time. Book anyway?'))return;
+  let p=find();
+  if(!p){p={id:nextId('AU',db.patients),name:f.get('name').trim(),phone:f.get('phone').trim(),email:'',dob:'',gender:'',emergency:'',address:'',history:'',allergies:'Not recorded',created:iso(today)};db.patients.push(p)}
+  let a={id:nextId('AP',db.appointments),patientId:p.id,date,time,service:service.name,duration:service.duration||60,fee:+service.fee||0,status:'Confirmed',notes:(f.get('notes')||'').trim(),historyNote:'',followup:'',reason:'',payment:{received:0,verified:0,method:'',status:'Pending'},created:iso(today)};
+  db.appointments.push(a);
+  let wa=$('enqWA').checked;
+  db.selectedDate=date;closeModal();save();
+  if(wa)waOpen(p.phone,fillMessageTemplate('appointmentConfirmation',appointmentTemplateValues(a,p)));
+ };
+}
+function formatTime(t){
+ let [h,m]=t.split(':').map(Number),ampm=h>=12?'PM':'AM',hour=h%12||12;
+ return hour+':'+String(m).padStart(2,'0')+' '+ampm;
+}
+
+/* VIEW RECORD */
+function openRecord(id){
+ let a=db.appointments.find(x=>x.id===id),p=patient(a.patientId);if(!a||!p)return;
+ openModal('Patient record · '+a.id,`
+ <div class="recordgrid">
+ <div class="info"><small>PATIENT</small><b>${safe(p.name)}</b><small>${p.id} · ${safe(p.gender||'Not specified')}</small></div>
+ <div class="info"><small>CONTACT</small><b>${safe(p.phone)}</b><small>${safe(p.email||'No email')} · ${safe(p.address||'No address')}</small></div>
+ <div class="info"><small>MEDICAL HISTORY</small><b>${safe(p.history||'Not recorded')}</b></div>
+ <div class="info"><small>ALLERGIES</small><b>${safe(p.allergies||'Not recorded')}</b></div>
+ <div class="info"><small>APPOINTMENT</small><b>${a.date} · ${a.time}</b><small>${safe(a.service)} · ${a.duration||60} min</small></div>
+ <div class="info"><small>CURRENT STATUS</small>${pill(a.status)}<small>${safe(a.notes||'No booking notes')}</small></div>
+ </div>
+ <div style="margin-top:15px"><label style="font-size:11px;font-weight:bold;color:#536574">Previous visits · date-wise (latest first)</label><div style="margin-top:6px">${visitTimeline(p.id,a.id)}</div></div>
+ <div class="field" style="margin-top:15px"><label>Consultation outcome *</label><select id="recordStatus"><option value="">Choose outcome…</option><option value="Followup">Follow-up</option><option value="Overdue">Overdue</option><option value="Completed">Completed</option><option value="Rescheduled">Rescheduled</option><option value="Cancelled">Cancelled</option><option value="DoctorEmergency">Doctor emergency (inform patient)</option></select></div>
+ <div id="outcomeFields"></div>
+ <div class="actions"><button class="btn soft" onclick="saveOutcome('${id}',true)">Save &amp; WhatsApp draft</button><button class="btn" onclick="showHistory('${p.id}')">Patient history</button><button class="btn" onclick="closeModal()">Close</button><button class="btn primary" onclick="saveOutcome('${id}')">Save outcome</button></div>
+ <div class="muted small" style="margin-top:12px">Cancellation requires confirmation. Patient and appointment history are never deleted.</div>`);
+ $('recordStatus').value=a.doctorEmergency?'DoctorEmergency':(['Followup','Overdue','Completed','Rescheduled','Cancelled'].includes(a.status)?a.status:'');
+ $('recordStatus').onchange=()=>renderOutcomeFields(a,p);
+ if($('recordStatus').value)renderOutcomeFields(a,p);
+}
+function renderOutcomeFields(a,p){
+ let s=$('recordStatus').value,el=$('outcomeFields');
+ const caseFields=`<div class="field span2"><label>Case / diagnosis *</label><textarea id="caseDx" placeholder="Complaint, findings and diagnosis for this visit…">${safe(a.diagnosis||a.notes||'')}</textarea></div>
+ <div class="field span2"><label>Treatment & advice given *</label><textarea id="caseTx" placeholder="Medicines, procedures, advice…">${safe(a.advice||a.historyNote||'')}</textarea></div>
+ <div class="field span2"><label>Plan / what to do at the next visit</label><textarea id="casePlan" placeholder="e.g. repeat blood test, review BP log…">${safe(a.plan||'')}</textarea></div>`;
+ if(s==='Followup')el.innerHTML=`
+  <div class="notice">Today’s case is saved under this date in the patient’s history. A follow-up date creates an open task on the Overview.</div>
+  <div class="formgrid">${caseFields}
+  <div class="field"><label>Next follow-up date *</label><input id="nextFollowup" type="date" value="${a.followup||iso(plus(today,7))}"></div>
+  <div class="field"><label>Follow-up reason</label><input id="followReason" value="${safe(a.notes||'')}"></div>
+  <div class="field span2"><label>Update allergies (optional)</label><input id="allergyUpdate" value="${safe(p.allergies||'')}"></div></div>`;
+ else if(s==='Completed')el.innerHTML=`
+  <div class="notice">Previous visits are shown above. Today’s case is saved under this date in the patient’s history.</div>
+  <div class="formgrid">${caseFields}
+  <div class="field"><label>Next follow-up date (optional)</label><input id="nextFollowup" type="date" value="${a.followup||''}"></div>
+  <div class="field"><label>Ongoing medical history (optional update)</label><input id="historyUpdate" value="${safe(p.history||'')}"></div></div>`;
+ else if(s==='Overdue')el.innerHTML=`<div class="notice">Use this when the patient missed the visit or follow-up. They move to the Overdue list so you can send a reminder.</div><div class="field"><label>What is pending? (optional)</label><textarea id="overdueNote" placeholder="e.g. missed follow-up, report review pending…">${safe(a.overdueNote||'')}</textarea></div>`;
+ else if(s==='Rescheduled')el.innerHTML=`<div class="notice">Choose the new date and time. The old slot is kept in the visit history.</div><div class="formgrid"><div class="field"><label>New date *</label><input id="reDate" type="date" value="${a.status==='Rescheduled'?a.date:iso(plus(today,1))}"></div><div class="field"><label>New time *</label><input id="reTime" type="time" value="${a.time||'10:00'}"></div><div class="field span2"><label>Reason (optional)</label><input id="reReason" value="${safe(a.rescheduleNote||'')}"></div></div>`;
+ else if(s==='DoctorEmergency')el.innerHTML=`<div class="notice">Use this when the doctor cannot attend. The appointment is marked <b>Rescheduled</b> (reason: doctor emergency) and stays in the visit history. Review the WhatsApp draft below, then use <b>Save &amp; WhatsApp draft</b>.</div><div class="field"><label>WhatsApp message to ${safe(p.name)} (editable)</label><textarea id="emgDraft" style="min-height:170px">${safe(fillMessageTemplate('doctorEmergency',appointmentTemplateValues(a,p)))}</textarea></div>`;
+ else if(s==='Cancelled')el.innerHTML=`<div class="notice">This marks the appointment as cancelled. The patient and appointment history remain available.</div><div class="field"><label>Cancellation reason *</label><textarea id="cancelReason" placeholder="Enter reason for cancellation…">${safe(a.reason||'')}</textarea></div>`;
+ else el.innerHTML='';
+}
+function saveOutcome(id,thenWA){
+ let a=db.appointments.find(x=>x.id===id),p=patient(a.patientId),s=$('recordStatus').value;
+ if(!s){alert('Please choose a consultation outcome.');return}
+ if(s==='Cancelled'){
+  let reason=$('cancelReason')?.value.trim();if(!reason){alert('Please enter a cancellation reason.');return}
+  if(!confirm('Confirm cancellation? The record will be retained.'))return;
+  a.reason=reason;a.status='Cancelled';a.followup='';
+ }
+ if(s==='Followup'){
+  let date=$('nextFollowup')?.value;if(!date){alert('Please select the next follow-up date.');return}
+  a.status='Followup';a.followup=date;a.notes=$('followReason')?.value||a.notes;
+  a.diagnosis=$('caseDx').value.trim();a.advice=$('caseTx').value.trim();a.plan=$('casePlan').value.trim();a.historyNote=a.advice;
+  if($('allergyUpdate')?.value)p.allergies=$('allergyUpdate').value;
+ }
+ if(s==='Completed'){
+  let dx=$('caseDx').value.trim(),tx=$('caseTx').value.trim();if(!dx||!tx){alert('Please write the case / diagnosis and the treatment & advice before completing.');return}
+  a.status='Completed';a.diagnosis=dx;a.advice=tx;a.plan=$('casePlan').value.trim();a.historyNote=tx;p.history=$('historyUpdate')?.value||p.history;a.followup=$('nextFollowup')?.value||'';
+ }
+ if(s==='DoctorEmergency'){
+  if(a.status!=='Rescheduled'||!a.doctorEmergency)a.rescheduledFrom=a.date+' '+a.time;
+  a.status='Rescheduled';a.doctorEmergency=true;a.rescheduleNote='Doctor emergency';a.followup='';
+  a.emergencyMessage=$('emgDraft')?.value||'';a.emergencyOn=iso(today)+' '+new Date().toTimeString().slice(0,5);db.sent[sentKey('emg',a)]=1;
+ }else{a.doctorEmergency=false}
+ if(s==='Overdue'){a.status='Overdue';a.overdueNote=$('overdueNote')?.value.trim()||''}
+ if(s==='Rescheduled'){
+  let nd=$('reDate')?.value,nt=$('reTime')?.value;if(!nd||!nt){alert('Please choose the new date and time.');return}
+  if(a.status!=='Rescheduled'||a.date!==nd||a.time!==nt)a.rescheduledFrom=a.date+' '+a.time;
+  a.status='Rescheduled';a.date=nd;a.time=nt;a.rescheduleNote=$('reReason')?.value.trim()||'';a.followup='';
+ }
+ save();closeModal();
+ if(thenWA||s==='DoctorEmergency'){
+  let url=waUrl(p.phone,outcomeMessage(a,p)),w=null;
+  try{w=window.open(url,'_blank')}catch(e){}
+  if(!w)openModal('Saved · now send the WhatsApp message',`<div class="notice">Doctor emergency saved in the patient's history. Your browser did not open WhatsApp automatically. Press the button below, then press Send in WhatsApp.</div><div class="actions"><a class="btn primary" href="${url}" target="_blank" rel="noopener" onclick="setTimeout(closeModal,300)" style="text-decoration:none">Open WhatsApp for ${safe(p.name)}</a><button class="btn" onclick="closeModal()">Close</button></div>`);
+ }
+}
+function outcomeMessage(a,p){
+ if(a.doctorEmergency&&a.status==='Rescheduled')return a.emergencyMessage||fillMessageTemplate('doctorEmergency',appointmentTemplateValues(a,p));
+ let m={Completed:'completed',Followup:'followup',Overdue:'overdue'}[a.status];
+ if(m)return buildBroadcastMessage(m,a,p);
+ return fillMessageTemplate(a.status==='Cancelled'?'cancellation':'rescheduling',appointmentTemplateValues(a,p));
+}
+function updateBalance(){
+ let fee=+$('payFee')?.value||0,received=+$('payReceived')?.value||0;
+ if($('balanceText'))$('balanceText').textContent='Balance due: '+money(Math.max(0,fee-received));
+}
+function savePayment(id){
+ let a=db.appointments.find(x=>x.id===id),fee=+$('payFee').value,received=+$('payReceived').value,verified=$('payVerify').value;
+ if(received<0||fee<0){alert('Enter valid amounts.');return}
+ if(received>fee&&!confirm('Amount received exceeds the consultation fee. Save anyway?'))return;
+ a.fee=fee;a.payment={received,verified:verified==='verified'?received:0,method:$('payMethod').value,status:verified==='verified'?(received>=fee?'Paid':received>0?'Partial':'Pending'):(received?'Verification':'Pending')};
+ save();openRecord(id);
+}
+
+/* WHATSAPP DRAFTS */
+function waDisplayDate(value){
+ if(!value)return '';
+ // Parse YYYY-MM-DD as local calendar parts to avoid timezone date shifts.
+ let m=String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+ if(!m)return value;
+ let d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
+ return d.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+}
+function makeWhatsApp(id){
+ let a=db.appointments.find(x=>x.id===id);
+ if(!a){alert('Appointment not found. Please refresh and try again.');return}
+ let p=patient(a.patientId);
+ if(!p){alert('Patient record not found for this appointment.');return}
+ let values=appointmentTemplateValues(a,p);
+ const templateKeys={
+  'Appointment confirmation':'appointmentConfirmation',
+  'Appointment reminder':'appointmentReminder',
+  'Follow-up reminder':'followupReminder',
+  'Cancellation':'cancellation',
+  'Doctor emergency':'doctorEmergency',
+  'Rescheduling':'rescheduling',
+  'Treatment completion':'treatmentCompletion',
+  'Custom':'custom'
+ };
+ let selected='Appointment confirmation';
+ const options=Object.keys(templateKeys);
+ openModal('WhatsApp message draft',`<div class="notice">Choose a saved template, review and edit the message, then open WhatsApp. AURA never sends messages automatically. You can change the wording in the Message templates tab.</div>
+ <div class="field"><label>Message template</label><select id="waType">${options.map(x=>`<option>${x}</option>`).join('')}</select></div>
+ <div class="field"><label>Message</label><textarea id="waMessage" style="min-height:150px">${safe(fillMessageTemplate(templateKeys[selected],values))}</textarea></div>
+ <div class="actions"><button class="btn primary" onclick="openWA('${safe(p.phone)}')">Open WhatsApp</button><button class="btn" onclick="closeModal()">Close</button></div>
+ <div class="muted small" style="margin-top:10px">Opening WhatsApp does not confirm that a message was sent.</div>`);
+ $('waType').onchange=()=>{$('waMessage').value=fillMessageTemplate(templateKeys[$('waType').value],values)};
+}
+function openWA(phone){waOpen(phone,$('waMessage').value)}
+
+/* MESSAGING — PERSONALISED WHATSAPP BROADCAST DRAFTS */
+let messagingBatch=[];
+let messagingType='';
+const messagingTitles={completed:'Daily completion messages',followup:'Follow-up messages',overdue:'Overdue messages',reminder:'24-hour appointment reminders'};
+function getMessagingAudience(type){
+ const now=new Date(),todayISO=iso(now),next24=new Date(now.getTime()+24*60*60*1000);
+ let eligible=db.appointments.filter(a=>{
+  const linkedPatient=patient(a.patientId);
+  if(!linkedPatient||!String(linkedPatient.name||'').trim())return false;
+  if(type==='completed')return a.status==='Completed'&&a.date===todayISO;
+  if(type==='followup')return a.status==='Followup'&&!!a.followup;
+  if(type==='overdue')return (a.status==='Followup'&&!!a.followup&&a.followup<todayISO)||a.status==='Overdue'||(['Confirmed','Rescheduled'].includes(a.status)&&a.date<todayISO);
+  if(type==='reminder'){
+   if(!['Confirmed','Rescheduled'].includes(a.status)||!a.date||!a.time)return false;
+   const when=new Date(a.date+'T'+a.time+':00');
+   return !Number.isNaN(when.getTime())&&when>now&&when<=next24;
+  }
+  return false;
+ });
+ // One draft per patient in each group. Choose the most relevant appointment:
+ // latest completion today; nearest upcoming follow-up/reminder; oldest overdue item.
+ const chosen=new Map();
+ eligible.forEach(a=>{
+  const key=a.patientId||a.id,prev=chosen.get(key);
+  if(!prev){chosen.set(key,a);return}
+  let aKey=type==='completed'?(a.date+a.time):(type==='overdue'?(a.followup||a.date):(type==='followup'?a.followup:(a.date+a.time)));
+  let pKey=type==='completed'?(prev.date+prev.time):(type==='overdue'?(prev.followup||prev.date):(type==='followup'?prev.followup:(prev.date+prev.time)));
+  if(type==='completed'?aKey>pKey:aKey<pKey)chosen.set(key,a);
+ });
+ return [...chosen.values()].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+}
+function buildBroadcastMessage(type,a,p){
+ const values=appointmentTemplateValues(a,p);
+ if(type==='completed')return fillMessageTemplate('dailyCompletion',values);
+ if(type==='followup')return fillMessageTemplate('broadcastFollowup',values);
+ if(type==='overdue'){
+  values.followup_date=waDisplayDate(a.followup||a.date);
+  return fillMessageTemplate('overdue',values);
+ }
+ return fillMessageTemplate('reminder24h',values);
+}
+function renderMessagingCounts(){
+ $('msgCountCompleted').textContent=getMessagingAudience('completed').length;
+ $('msgCountFollowup').textContent=getMessagingAudience('followup').length;
+ $('msgCountOverdue').textContent=getMessagingAudience('overdue').length;
+ $('msgCountReminder').textContent=getMessagingAudience('reminder').length;
+ if($('feedbackLinkInput'))$('feedbackLinkInput').value=db.settings.feedbackLink||'';
+}
+function saveFeedbackLink(){
+ db.settings.feedbackLink=$('feedbackLinkInput').value.trim();
+ localStorage.setItem('aura_single_doctor_v4',JSON.stringify(db));
+ alert('Feedback link saved. It will be included in daily completion messages.');
+}
+function prepareBroadcast(type){
+ messagingType=type;
+ messagingBatch=getMessagingAudience(type).map(a=>({appointmentId:a.id,patientId:a.patientId,phone:patient(a.patientId)?.phone||'',name:patient(a.patientId)?.name||'Patient',date:a.date,time:a.time,followup:a.followup||'',followupTime:a.followupTime||'',service:a.service,message:buildBroadcastMessage(type,a,patient(a.patientId)||{})}));
+ renderMessagingBatch();
+}
+function renderMessagingBatch(){
+ $('messageBatchTitle').textContent=messagingTitles[messagingType]||'Message recipients';
+ $('messageBatchCount').textContent=messagingBatch.length+' personalised draft'+(messagingBatch.length===1?'':'s')+' prepared';
+ $('messageRecipientList').innerHTML=messagingBatch.map((x,i)=>{let timing=messagingType==='followup'?'Follow-up: '+waDisplayDate(x.followup)+(x.followupTime?' · '+x.followupTime:''):messagingType==='overdue'?'Due: '+waDisplayDate(x.followup||x.date):'Appointment: '+waDisplayDate(x.date)+' '+(x.time||'');return `<div class="message-recipient"><div><b>${safe(x.name)}</b><small>${safe(x.phone||'No phone number')} · ${safe(timing)} · ${safe(x.service||'')}</small></div><div class="actions"><button class="btn sm" onclick="openBroadcastDraft(${i})">Edit</button><button class="btn primary sm" ${x.phone?'':'disabled'} onclick="msgSendOne(${i})">${db.sent[msgKey(x)]?'Sent ✓':'WhatsApp'}</button></div></div>`}).join('')||'<div class="empty">No eligible appointments found for this message group.</div>';
+}
+function openBroadcastDraft(index){
+ const x=messagingBatch[index];if(!x)return;
+ if(!x.phone){alert('This patient has no phone number saved. Update the patient record first.');return}
+ openModal('WhatsApp · '+safe(x.name),`<div class="notice">Personalised ${safe(messagingTitles[messagingType]||'message')}. Review the message and press Send in WhatsApp.</div><div class="field"><label>Patient</label><input value="${safe(x.name)}" readonly></div><div class="field"><label>Message</label><textarea id="waMessage" style="min-height:170px">${safe(x.message)}</textarea></div><div class="actions"><button class="btn primary" onclick="openWA('${safe(x.phone)}')">Open WhatsApp</button><button class="btn" onclick="closeModal()">Close</button></div><div class="muted small" style="margin-top:10px">AURA cannot verify whether the message was sent.</div>`);
+}
+function clearBroadcast(){messagingBatch=[];messagingType='';$('messageBatchTitle').textContent='Message recipients';$('messageBatchCount').textContent='Choose a message group above';$('messageRecipientList').innerHTML='<div class="empty">Select one of the four message groups above to prepare drafts.</div>';}
+
+/* PATIENT HISTORY */
+function showHistory(pid){
+ let p=patient(pid),vis=db.appointments.filter(a=>a.patientId===pid).sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+ openModal('Patient history · '+safe(p.name),`
+ <div class="recordgrid"><div class="info"><small>MEDICAL HISTORY</small><b>${safe(p.history||'Not recorded')}</b></div>
+ <div class="info"><small>ALLERGIES</small><b>${safe(p.allergies||'Not recorded')}</b></div>
+ <div class="info"><small>EMERGENCY CONTACT</small><b>${safe(p.emergency||'Not recorded')}</b></div>
+ <div class="info"><small>REGISTERED</small><b>${p.created||'Not recorded'}</b></div></div>
+ <h3 style="font-size:14px;margin-top:18px">Visit timeline · date-wise</h3>
+ ${vis.map(visitCard).join('')||'<div class="empty">No visits recorded.</div>'}`);
+}
+
+/* CALENDAR + LISTS */
+let calDate=new Date(today.getFullYear(),today.getMonth(),1);
+function changeMonth(n){calDate.setMonth(calDate.getMonth()+n);renderCalendar()}
+function goToday(){calDate=new Date(today.getFullYear(),today.getMonth(),1);db.selectedDate=iso(today);renderAll()}
+function selectDate(d){db.selectedDate=d;renderCalendar();renderAppointments()}
+function clearDateFilter(){db.selectedDate='';renderCalendar();renderAppointments()}
+function renderCalendar(){
+ let y=calDate.getFullYear(),m=calDate.getMonth(),offset=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+ $('monthTitle').textContent=calDate.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+ let html=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<div class="dayname">${x}</div>`).join('');
+ for(let i=0;i<offset;i++)html+='<div></div>';
+ for(let d=1;d<=days;d++){
+  let date=iso(new Date(y,m,d)),count=db.appointments.filter(a=>a.date===date&&a.status!=='Cancelled').length;
+  html+=`<button class="day ${date===iso(today)?'today':''} ${date===db.selectedDate?'selected':''}" onclick="selectDate('${date}')">${d}${count?`<em>${count} booking${count>1?'s':''}</em>`:''}</button>`;
+ }
+ $('calendar').innerHTML=html;
+}
+function renderPatients(){
+ let q=($('patientSearch')?.value||'').toLowerCase(),arr=db.patients.filter(p=>(p.name+p.phone+p.id).toLowerCase().includes(q));
+ $('patientCount').textContent=arr.length+' patients';
+ $('patientRows').innerHTML=arr.map(p=>`<tr><td><span class="patientname">${safe(p.name)}</span><br><span class="muted small">${p.id}</span></td><td>${safe(p.phone)}</td><td>${db.appointments.filter(a=>a.patientId===p.id).length}</td><td><button class="btn sm" onclick="showHistory('${p.id}')">View</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">No matching patients.</td></tr>';
+}
+function renderAppointments(){
+ let q=($('apptSearch')?.value||'').toLowerCase(),st=$('statusFilter')?.value||'';
+ let arr=db.appointments.filter(a=>{let p=patient(a.patientId);return(!db.selectedDate||a.date===db.selectedDate)&&(!st||a.status===st)&&((p?.name+' '+a.service+' '+a.id).toLowerCase().includes(q))}).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ $('appointmentListTitle').textContent=db.selectedDate?'Appointments · '+db.selectedDate:'All appointments';$('apptListCount').textContent=arr.length+' records';
+ $('apptRows').innerHTML=arr.map(a=>`<tr><td>${a.date}<br><span class="muted">${a.time}</span></td><td><b>${safe(patient(a.patientId)?.name||'Unknown')}</b><br><span class="muted">${a.patientId}</span></td><td>${safe(a.service)}</td><td>${money(a.fee)}</td><td>${pill(a.status)}</td><td><button class="btn sm soft" onclick="openRecord('${a.id}')">View record</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No appointments found.</td></tr>';
+}
+
+/* OVERVIEW AND TASKS */
+function renderOverview(){
+ let d=iso(today),todayA=db.appointments.filter(a=>a.date===d),completed=todayA.filter(a=>a.status==='Completed').length;
+ let follow=db.appointments.filter(a=>a.status==='Followup'&&a.followup);
+ $('todayLabel').textContent=today.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ let rq=pendingQueue('reminder').length,oq=pendingQueue('overdue').length,fl=db.feedback||[],pos=fl.length?Math.round(fl.filter(f=>+f.rating>=4).length/fl.length*100):0;
+ let cards=[['Patients today',todayA.length,'▦',completed+' completed so far',''],['Reminders waiting',rq,'⏰','Appointments in next 24 hours',rq?'kpi-warn':'kpi-ok'],['Overdue patients',oq,'↻','Need a nudge today',oq?'kpi-bad':'kpi-ok'],['Positive feedback',pos+'%','☺',fl.length+' reviews recorded',pos>=75?'kpi-ok':'kpi-warn']];
+ $('overviewStats').innerHTML=cards.map(x=>`<div class="card ${x[4]||''}"><span class="staticon">${x[2]}</span><div class="statlabel">${x[0]}</div><div class="statnum">${x[1]}</div><div class="statfoot">${x[3]}</div></div>`).join('');
+ $('todayCount').textContent=todayA.length+' appointments';
+ $('todayRows').innerHTML=todayA.sort((a,b)=>a.time.localeCompare(b.time)).map(a=>`<tr><td><b>${a.time}</b></td><td>${safe(patient(a.patientId)?.name||'—')}</td><td>${safe(a.service)}</td><td>${pill(a.status)}</td><td><button class="btn sm" onclick="openRecord('${a.id}')">Open</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">No appointments scheduled today.</td></tr>';
+ let tasks=db.appointments.filter(a=>(a.status==='Followup'&&a.followup)||a.status==='Overdue'||(a.status==='Confirmed'&&a.date<d)).sort((a,b)=>(a.followup||a.date).localeCompare(b.followup||b.date));
+ $('taskCount').textContent=tasks.length+' open';
+ $('taskList').innerHTML=tasks.slice(0,8).map(a=>`<div class="task"><div class="dot"></div><div class="taskcontent"><b>${a.status==='Followup'?'Follow-up · ':a.status==='Overdue'?'Overdue · ':'Past appointment · '}${safe(patient(a.patientId)?.name||'')}</b><small>${a.followup||a.date} · ${safe(a.service)}</small></div><button class="btn sm" onclick="openRecord('${a.id}')">Open</button></div>`).join('')||'<div class="empty">You are all caught up.</div>';
+ let upcoming=follow.filter(a=>a.followup>=d&&a.followup<=iso(plus(today,14))).sort((a,b)=>a.followup.localeCompare(b.followup));
+ $('followupList').innerHTML=upcoming.map(a=>`<div class="task"><div class="dot"></div><div class="taskcontent"><b>${safe(patient(a.patientId)?.name||'')}</b><small>${a.followup} · ${safe(a.service)}</small></div><button class="btn sm" onclick="openRecord('${a.id}')">Open</button></div>`).join('')||'<div class="empty">No follow-ups due in the next 14 days.</div>';
+}
+function renderApptStats(){
+ let labels=['All bookings','Confirmed','Completed','Followup','Cancelled'];
+ $('apptStats').innerHTML=labels.map((x,i)=>{let n=i===0?db.appointments.length:db.appointments.filter(a=>a.status===x).length;return `<div class="card"><div class="statlabel">${x}</div><div class="statnum">${n}</div><div class="statfoot">${i===0?'Total appointment records':'Current status count'}</div></div>`}).join('');
+}
+
+/* ANALYTICS */
+function inRange(date,range){
+ if(range==='all')return true;if(range==='today')return date===iso(today);if(range==='month')return date.slice(0,7)===iso(today).slice(0,7);
+ if(range==='week'){let start=new Date(today);start.setDate(today.getDate()-((today.getDay()+6)%7));return date>=iso(start)&&date<=iso(today)}return true;
+}
+function ratingStars(value){let n=Math.max(0,Math.min(5,Number(value)||0));return '★'.repeat(n)+'☆'.repeat(5-n)}
+function openFeedbackForm(){
+ let completed=db.appointments.filter(a=>a.status==='Completed');
+ if(!completed.length){alert('Record a completed appointment before adding patient feedback.');return}
+ let options=completed.map(a=>`<option value="${safe(a.id)}">${safe(patient(a.patientId)?.name||'Patient')} · ${safe(a.service)} · ${a.date}</option>`).join('');
+ openModal('Record patient feedback',`<form id="feedbackForm">
+  <div class="notice">Record feedback received from the patient. Ratings are stored locally in this browser and included in Analytics according to the selected date range.</div>
+  <div class="field"><label>Completed appointment *</label><select name="appointmentId" id="feedbackAppointment" required>${options}</select></div>
+  <div class="field"><label>Star rating *</label><select name="rating" required><option value="5">5 — Excellent</option><option value="4">4 — Good</option><option value="3">3 — Average</option><option value="2">2 — Poor</option><option value="1">1 — Very poor</option></select></div>
+  <div class="field"><label>Patient feedback / comment</label><textarea name="comment" maxlength="500" placeholder="Enter the patient's comments (optional)"></textarea></div>
+  <div class="actions"><button class="btn primary">Save feedback</button><button type="button" class="btn" onclick="closeModal()">Cancel</button></div>
+ </form>`);
+ $('feedbackForm').onsubmit=e=>{
+  e.preventDefault();let f=new FormData(e.target),a=db.appointments.find(x=>x.id===f.get('appointmentId'));
+  if(!a||a.status!=='Completed'){alert('Feedback can only be linked to a completed appointment.');return}
+  if(db.feedback.some(x=>x.appointmentId===a.id)){alert('Feedback has already been recorded for this appointment.');return}
+  db.feedback.push({id:nextId('FB',db.feedback),appointmentId:a.id,patientId:a.patientId,service:a.service,rating:Number(f.get('rating')),comment:f.get('comment').trim(),date:iso(today)});
+  closeModal();save();
+ };
+}
+function renderRatings(range){
+ let list=(db.feedback||[]).filter(f=>inRange(f.date||'',range));
+ let count=list.length,total=list.reduce((sum,f)=>sum+Number(f.rating||0),0),avg=count?total/count:0;
+ let positive=list.filter(f=>Number(f.rating)>=4),negative=list.filter(f=>Number(f.rating)<=2);
+ let pct=n=>count?Math.round(n/count*100):0;
+ $('ratingSummary').innerHTML=`
+  <div class="card"><div class="statlabel">Average rating</div><div class="rating-number">${count?avg.toFixed(1):'—'} <span class="stars">${count?ratingStars(Math.round(avg)):'☆☆☆☆☆'}</span></div><div class="rating-muted">${count} patient review${count===1?'':'s'} in selected period</div></div>
+  <div class="card"><div class="statlabel">Positive feedback</div><div class="rating-number">${pct(positive.length)}%</div><div class="stars">${positive.length} positive review${positive.length===1?'':'s'}</div><div class="rating-muted">4–5 star ratings</div></div>
+  <div class="card"><div class="statlabel">Negative feedback</div><div class="rating-number">${pct(negative.length)}%</div><div class="rating-muted">${negative.length} negative review${negative.length===1?'':'s'} · 1–2 star ratings</div><div class="rating-muted" style="margin-top:5px">${count-positive.length-negative.length} neutral (3-star) review${count-positive.length-negative.length===1?'':'s'}</div></div>`;
+ $('ratingCountLabel').textContent=count+' total review'+(count===1?'':'s');
+ $('starDistribution').innerHTML=[5,4,3,2,1].map(n=>{let c=list.filter(f=>Number(f.rating)===n).length;return `<div class="star-row"><span>${n} star${n===1?'':'s'}</span><div class="star-track"><i style="width:${count?c/count*100:0}%"></i></div><b>${c}</b></div>`}).join('')||'<div class="empty">No ratings recorded.</div>';
+ let services=[...new Set(list.map(f=>f.service||'Unspecified service'))];
+ $('serviceRatingRows').innerHTML=services.map(name=>{let rows=list.filter(f=>(f.service||'Unspecified service')===name),mean=rows.reduce((sum,f)=>sum+Number(f.rating||0),0)/rows.length,good=rows.filter(f=>Number(f.rating)>=4).length;return `<tr><td>${safe(name)}</td><td><b>${mean.toFixed(1)}</b> <span class="stars">${ratingStars(Math.round(mean))}</span></td><td>${rows.length}</td><td>${Math.round(good/rows.length*100)}%</td></tr>`}).join('')||'<tr><td colspan="4" class="empty">No service ratings recorded.</td></tr>';
+ $('feedbackCountLabel').textContent=count+' review'+(count===1?'':'s');
+ $('feedbackList').innerHTML=list.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,10).map(f=>`<div class="feedback-item"><div><b>${safe(patient(f.patientId)?.name||'Patient')}</b><div class="rating-muted">${safe(f.service||'Service')} · ${safe(f.date||'')}</div>${f.comment?`<p>${safe(f.comment)}</p>`:'<p class="rating-muted">No written comment.</p>'}</div><div style="text-align:right"><div class="stars">${ratingStars(Number(f.rating))}</div><span class="rating-muted">${Number(f.rating)}/5</span></div></div>`).join('')||'<div class="empty">No patient feedback recorded for this period. Use “Record feedback” to add a review.</div>';
+}
+
+function renderAnalytics(){
+ let range=$('analyticsRange').value,arr=db.appointments.filter(a=>inRange(a.date,range));
+ let done=arr.filter(a=>a.status==='Completed').length,cancel=arr.filter(a=>a.status==='Cancelled').length;
+ let rev=arr.reduce((s,a)=>s+(a.payment?.verified||0),0),due=arr.reduce((s,a)=>s+Math.max(0,a.fee-(a.payment?.received||0)),0);
+ let newPatients=db.patients.filter(p=>inRange(p.created||'',range)).length;
+ let stats=[['Bookings',arr.length],['Completed',done],['Completion rate',arr.length?Math.round(done/arr.length*100)+'%':'0%'],['Verified revenue',money(rev)]];
+ $('analyticsStats').innerHTML=stats.map(x=>`<div class="card"><div class="statlabel">${x[0]}</div><div class="statnum">${x[1]}</div><div class="statfoot">Selected period</div></div>`).join('');
+ let outcomes=['Confirmed','Rescheduled','Followup','Overdue','Completed','Cancelled'];
+ $('outcomeBars').innerHTML=outcomes.map(s=>{let n=arr.filter(a=>a.status===s).length,w=arr.length?n/arr.length*100:0;return `<div class="barrow"><span>${s}</span><div class="bar"><i style="width:${w}%"></i></div><b>${n}</b></div>`}).join('');
+ let months=[];for(let i=5;i>=0;i--){let dt=new Date(today.getFullYear(),today.getMonth()-i,1),key=iso(dt).slice(0,7);let val=db.appointments.filter(a=>a.date.startsWith(key)).reduce((s,a)=>s+(a.payment?.verified||0),0);months.push({label:dt.toLocaleDateString('en-IN',{month:'short'}),val})}
+ let max=Math.max(1,...months.map(x=>x.val));
+ $('revenueChart').innerHTML=months.map(x=>`<div class="chartcol"><b>${x.val?Math.round(x.val/1000*10)/10+'k':'—'}</b><i style="height:${Math.max(2,x.val/max*100)}%"></i><small>${x.label}</small></div>`).join('');
+ let services=[...new Set(arr.map(a=>a.service))];
+ $('serviceRows').innerHTML=services.map(s=>{let list=arr.filter(a=>a.service===s);return `<tr><td>${safe(s)}</td><td>${list.length}</td><td>${list.filter(a=>a.status==='Completed').length}</td><td>${money(list.reduce((v,a)=>v+(a.payment?.verified||0),0))}</td></tr>`}).join('')||'<tr><td colspan="4" class="empty">No service data.</td></tr>';
+ let returning=db.patients.filter(p=>db.appointments.filter(a=>a.patientId===p.id).length>1).length,patientsSeen=new Set(arr.map(a=>a.patientId)).size;
+ $('patientInsights').innerHTML=`<div class="barrow"><span>Patients seen</span><div class="bar"><i style="width:${db.patients.length?patientsSeen/db.patients.length*100:0}%"></i></div><b>${patientsSeen}</b></div>
+ <div class="barrow"><span>Returning</span><div class="bar"><i style="width:${db.patients.length?returning/db.patients.length*100:0}%"></i></div><b>${returning}</b></div>
+ <div class="barrow"><span>Cancelled</span><div class="bar"><i style="width:${arr.length?cancel/arr.length*100:0}%"></i></div><b>${cancel}</b></div>
+ <div class="info" style="margin-top:15px"><small>OUTSTANDING BALANCE</small><b>${money(due)}</b><small>New patient profiles in period: ${newPatients}</small></div>`;
+ renderRatings(range);renderServiceInsight(range);
+}
+
+/* ==========================================================
+   MANAGE TAB — SERVICES, WORKING DAYS, HOURLY TIME SLOTS
+========================================================== */
+function renderManage(){
+ let services=db.settings.services,days=db.settings.days,slots=db.settings.slots;
+ $('manageStats').innerHTML=[
+  ['Total services',services.length],['Active services',services.filter(s=>s.active).length],
+  ['Working days',days.filter(d=>d.active).length],['Active time slots',slots.filter(s=>s.active).length]
+ ].map(x=>`<div class="card"><div class="statlabel">${x[0]}</div><div class="statnum">${x[1]}</div></div>`).join('');
+
+ $('serviceManageList').innerHTML=services.map(s=>`
+ <div class="manage-row">
+  <div class="manage-main"><b>${safe(s.name)}</b><small>${money(s.fee)} · ${s.active?'Available for booking':'Not available for booking'}</small></div>
+  <div class="manage-actions">
+   <label class="switch" title="Turn service on or off"><input type="checkbox" ${s.active?'checked':''} onchange="toggleService('${s.id}',this.checked)"><span class="slider"></span></label>
+   <button class="btn sm" onclick="editService('${s.id}')">Edit</button>
+   <button class="btn sm danger" onclick="deleteService('${s.id}')">Delete</button>
+  </div>
+ </div>`).join('')||'<div class="empty">No services added. Use Add service to create one.</div>';
+
+ $('dayManageList').innerHTML=days.map(d=>`
+ <div class="manage-row">
+  <div class="manage-main"><b>${d.name}</b><small>${d.active?'Practice open':'Practice closed'}</small></div>
+  <label class="switch" title="Enable or disable this day"><input type="checkbox" ${d.active?'checked':''} onchange="toggleDay('${d.name}',this.checked)"><span class="slider"></span></label>
+ </div>`).join('');
+
+ $('slotManageList').innerHTML=slots.slice().sort((a,b)=>a.time.localeCompare(b.time)).map(s=>`
+ <div class="slot-card">
+  <div><b>${formatTime(s.time)}</b><small>${s.active?'Enabled':'Disabled'}</small></div>
+  <div class="manage-actions">
+   <label class="switch" title="Enable or disable time slot"><input type="checkbox" ${s.active?'checked':''} onchange="toggleSlot('${s.time}',this.checked)"><span class="slider"></span></label>
+   <button class="btn sm" onclick="editSlot('${s.time}')">Edit</button>
+   <button class="btn sm danger" onclick="deleteSlot('${s.time}')">×</button>
+  </div>
+ </div>`).join('')||'<div class="empty">No time slots. Add a time slot to enable bookings.</div>';
+}
+function toggleService(id,on){
+ let s=db.settings.services.find(x=>x.id===id);if(s)s.active=on;save();
+}
+function openServiceForm(id=''){
+ let s=id?db.settings.services.find(x=>x.id===id):null;
+ openModal(s?'Edit service':'Add service',`
+ <form id="serviceForm">
+  <div class="field"><label>Service / treatment name *</label><input name="name" required maxlength="70" value="${safe(s?.name||'')}" placeholder="e.g. General consultation"></div>
+  <div class="field"><label>Consultation fee (₹) *</label><input name="fee" type="number" min="0" required value="${s?.fee??700}"></div>
+  <div class="field"><label>Service availability</label><select name="active"><option value="true" ${s?.active!==false?'selected':''}>ON — available for booking</option><option value="false" ${s?.active===false?'selected':''}>OFF — unavailable for booking</option></select></div>
+  <div class="actions"><button class="btn primary">Save service</button><button type="button" class="btn" onclick="closeModal()">Cancel</button></div>
+ </form>`);
+ $('serviceForm').onsubmit=e=>{
+  e.preventDefault();let f=new FormData(e.target),name=f.get('name').trim(),fee=Number(f.get('fee'));
+  if(!name||fee<0){alert('Enter a valid service name and fee.');return}
+  let duplicate=db.settings.services.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.id!==id);
+  if(duplicate){alert('This service already exists.');return}
+  if(s){s.name=name;s.fee=fee;s.active=f.get('active')==='true'}
+  else db.settings.services.push({id:nextId('SV',db.settings.services),name,fee,active:f.get('active')==='true'});
+  closeModal();save();
+ };
+}
+function editService(id){openServiceForm(id)}
+function deleteService(id){
+ let s=db.settings.services.find(x=>x.id===id);if(!s)return;
+ let used=db.appointments.some(a=>a.service===s.name);
+ let msg=used?'This service is linked to existing appointments. Deleting it will not delete those appointment records. Continue?':'Delete this service?';
+ if(!confirm(msg))return;
+ db.settings.services=db.settings.services.filter(x=>x.id!==id);save();
+}
+function toggleDay(name,on){
+ let d=db.settings.days.find(x=>x.name===name);if(d)d.active=on;save();
+}
+function toggleSlot(time,on){
+ let s=db.settings.slots.find(x=>x.time===time);if(s)s.active=on;save();
+}
+function openSlotForm(oldTime=''){
+ const existing=oldTime?db.settings.slots.find(s=>s.time===oldTime):null;
+ openModal(existing?'Edit time slot':'Add time slot',`
+ <form id="slotForm" data-old-time="${existing?safe(existing.time):''}" onsubmit="saveSlotForm(event)">
+  <div class="notice">Each slot is one hour long. Add a starting time such as 09:00, 10:00 or 11:00.</div>
+  <div class="field"><label>Slot starting time *</label><input type="time" name="time" step="3600" required value="${existing?.time||'09:00'}"></div>
+  <div class="field"><label>Availability</label><select name="active"><option value="true" ${existing?.active!==false?'selected':''}>ON — available for booking</option><option value="false" ${existing?.active===false?'selected':''}>OFF — unavailable for booking</option></select></div>
+  <div class="actions"><button type="submit" class="btn primary">Save time slot</button><button type="button" class="btn" onclick="closeModal()">Cancel</button></div>
+ </form>`);
+}
+function saveSlotForm(e){
+ e.preventDefault();
+ const form=e.currentTarget;
+ const oldTime=form.dataset.oldTime||'';
+ const data=new FormData(form);
+ const time=String(data.get('time')||'').trim();
+ const active=data.get('active')==='true';
+ if(!/^(?:[01]\d|2[0-3]):00$/.test(time)){
+  alert('Please choose a full-hour starting time, such as 09:00 or 14:00.');
+  return;
+ }
+ const existing=oldTime?db.settings.slots.find(s=>s.time===oldTime):null;
+ const duplicate=db.settings.slots.some(s=>s.time===time&&s.time!==oldTime);
+ if(duplicate){
+  alert('This time slot already exists. Choose a different time.');
+  return;
+ }
+ if(oldTime&&!existing){
+  alert('This time slot is no longer available. Refresh the Manage tab and try again.');
+  closeModal();
+  return;
+ }
+ if(existing){
+  existing.time=time;
+  existing.active=active;
+ }else{
+  db.settings.slots.push({time,active});
+ }
+ db.settings.slots.sort((a,b)=>a.time.localeCompare(b.time));
+ closeModal();
+ save();
+}
+function editSlot(time){openSlotForm(time)}
+function deleteSlot(time){
+ if(!confirm('Delete the '+formatTime(time)+' time slot? Existing appointments will remain in the records.'))return;
+ db.settings.slots=db.settings.slots.filter(s=>s.time!==time);save();
+}
+function resetSlots(){
+ if(!confirm('Restore default hourly slots from 09:00 AM to 05:00 PM? Existing slots will be replaced.'))return;
+ db.settings.slots=defaultSlots();save();
+}
+
+
+/* ===== AURA UPGRADE: glance, emergency, reminder queue, discount insight ===== */
+const DOCTOR='Dr. Arjun Mehta';
+function greet(){const h=new Date().getHours();return (h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', Doctor'}
+function waOpen(phone,msg){let n=String(phone||'').replace(/\D/g,'');if(n.length===10)n='91'+n;window.open('https://wa.me/'+n+'?text='+encodeURIComponent(msg),'_blank')}
+function sentKey(type,a){return type+':'+a.id+':'+iso(today)}
+function pendingQueue(type){return getMessagingAudience(type).filter(a=>!db.sent[sentKey(type,a)])}
+function sendNext(type){
+ let q=pendingQueue(type);if(!q.length)return;
+ let a=q[0],p=patient(a.patientId);
+ waOpen(p.phone,buildBroadcastMessage(type,a,p));
+ db.sent[sentKey(type,a)]=1;save();
+}
+function setDiscount(id,v){let a=db.appointments.find(x=>x.id===id);if(!a)return;a.discount=Math.max(0,Math.min(100,+v||0));save()}
+
+function svcStats(range){
+ let A=db.appointments.filter(a=>inRange(a.date,range)),F=(db.feedback||[]).filter(f=>inRange(f.date||'',range));
+ let names=[...new Set([...A.map(a=>a.service),...F.map(f=>f.service)].filter(Boolean))];
+ return names.map(n=>{let a=A.filter(x=>x.service===n),f=F.filter(x=>x.service===n);
+  return {name:n,visits:a.length,reviews:f.length,rating:f.length?f.reduce((t,x)=>t+(+x.rating),0)/f.length:null,disc:a.length?a.reduce((t,x)=>t+(+x.discount||0),0)/a.length:0}});
+}
+function svcFlags(rows){
+ let rated=rows.filter(r=>r.rating!==null),top=rated.length?rated.reduce((m,r)=>r.rating>m.rating?r:m):null,
+ hd=rows.length?rows.reduce((m,r)=>r.disc>m.disc?r:m):null;
+ return {top,hd:hd&&hd.disc>0?hd:null,watch:rows.filter(r=>r.rating!==null&&r.disc>=15&&r.rating<3.5)};
+}
+function renderServiceInsight(range){
+ let rows=svcStats(range),fl=svcFlags(rows);
+ $('svcInsight').innerHTML=`<div class="sectionhead"><h3>Rating vs discount by service</h3><small>Which services patients love, and where discounts are given</small></div>
+ <div class="tablewrap"><table><thead><tr><th>SERVICE</th><th>AVG. RATING</th><th>REVIEWS</th><th>AVG. DISCOUNT</th><th>VISITS</th><th></th></tr></thead><tbody>`+
+ (rows.map(r=>`<tr><td><b>${safe(r.name)}</b></td><td>${r.rating===null?'—':r.rating.toFixed(1)+' ★'}</td><td>${r.reviews}</td><td>${r.disc.toFixed(0)}%</td><td>${r.visits}</td><td>${fl.top===r?'<span class="chip g">Top rated</span>':''}${fl.hd===r?'<span class="chip a">Highest discount</span>':''}${fl.watch.includes(r)?'<span class="chip r">High discount, low rating</span>':''}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No data in this period.</td></tr>')+`</tbody></table></div>`+
+ (fl.watch.length?`<div class="notice" style="margin-bottom:0">Check quality or waiting time for <b>${fl.watch.map(r=>safe(r.name)).join(', ')}</b> before offering more discount.</div>`:'');
+}
+function renderGlance(){
+ if($('overview').classList.contains('active'))$('topTitle').textContent=greet();
+ let rq=pendingQueue('reminder').length,oq=pendingQueue('overdue').length,fb=db.feedback||[];
+ let good=fb.filter(f=>+f.rating>=4).length,bad=fb.filter(f=>+f.rating<=2),neu=fb.length-good-bad.length,w=n=>fb.length?n/fb.length*100:0;
+ let fl=svcFlags(svcStats('all'));
+ $('glance').innerHTML=`<div class="glance-actions">
+  <button class="sosbtn" onclick="openEmergency()"><span>🚨</span><b>Doctor unavailable</b><small>Alert contact person and inform today’s patients</small></button>
+  <button onclick="sendNext('reminder')" ${rq?'':'disabled'}><span>⏰</span><b>Send next reminder</b><small>${rq} waiting · appointments in next 24 hours</small></button>
+  <button onclick="sendNext('overdue')" ${oq?'':'disabled'}><span>↻</span><b>Chase next overdue</b><small>${oq} waiting · follow-up or visit missed</small></button>
+ </div>
+ <div class="grid two" style="margin-bottom:14px">
+  <div class="card"><div class="sectionhead"><h3>Patient voice</h3><small>${fb.length} reviews</small></div>
+   <div class="voicebar"><i style="width:${w(good)}%;background:#16845b"></i><i style="width:${w(neu)}%;background:#d69b32"></i><i style="width:${w(bad.length)}%;background:#c34b55"></i></div>
+   <div class="muted small">${good} positive · ${neu} neutral · ${bad.length} negative</div>
+   <div style="margin-top:10px"><b style="font-size:12px">What to fix</b>${bad.slice(-3).reverse().map(f=>`<div class="fixitem">${safe(f.service||'')}: ${safe(f.comment||'No comment')}</div>`).join('')||'<div class="fixitem">No negative feedback. Great work.</div>'}</div>
+  </div>
+  <div class="card"><div class="sectionhead"><h3>Services at a glance</h3><button class="btn sm" onclick="switchTab('analytics')">Details</button></div>
+   ${fl.top?`<span class="chip g">Top rated: ${safe(fl.top.name)} (${fl.top.rating.toFixed(1)}★)</span>`:''}
+   ${fl.hd?`<span class="chip a">Highest discount: ${safe(fl.hd.name)} (${fl.hd.disc.toFixed(0)}%)</span>`:''}
+   ${fl.watch.map(r=>`<span class="chip r">Watch: ${safe(r.name)}, ${r.disc.toFixed(0)}% off but ${r.rating.toFixed(1)}★</span>`).join('')}
+   ${!fl.top&&!fl.hd?'<div class="empty">Record feedback and discounts to see this.</div>':''}
+  </div>
+ </div>`;
+}
+
+/* EMERGENCY: doctor unavailable */
+function emgAffected(){
+ let d=iso(today),now=new Date().toTimeString().slice(0,5),scope=$('emgScope')?$('emgScope').value:'day';
+ return db.appointments.filter(a=>a.date===d&&['Confirmed','Rescheduled','Followup'].includes(a.status)&&(scope==='day'||a.time>=now)).sort((a,b)=>a.time.localeCompare(b.time));
+}
+function openEmergency(){
+ openModal('Doctor unavailable',`
+ <div class="notice">Step 1 alerts your contact person. Step 2 informs each patient. WhatsApp opens with the message ready; press Send there.</div>
+ <div class="formgrid">
+  <div class="field"><label>Contact person’s WhatsApp *</label><input id="emgContact" inputmode="tel" value="${safe(db.settings.contactPerson||'')}" placeholder="10-digit number"></div>
+  <div class="field"><label>Affected patients</label><select id="emgScope" onchange="renderEmgList()"><option value="day">Whole day</option><option value="rest">Rest of today</option></select></div>
+  <div class="field span2"><label>Reason (optional, shared with contact person only)</label><input id="emgReason" placeholder="e.g. medical emergency"></div>
+ </div>
+ <div class="actions" style="margin-bottom:14px"><button class="btn primary" onclick="emgAlertContact()">1 · Alert contact person</button></div>
+ <div class="sectionhead"><h3>2 · Inform patients</h3><button class="btn sm soft" onclick="emgSendNext()">Send next</button></div>
+ <div id="emgList" class="message-list"></div>
+ <div class="actions" style="margin-top:14px"><button class="btn" onclick="emgReschedule()">Mark all as Rescheduled</button><button class="btn" onclick="closeModal()">Close</button></div>`);
+ renderEmgList();
+}
+function renderEmgList(){
+ let list=emgAffected();
+ $('emgList').innerHTML=list.map(a=>{let p=patient(a.patientId),done=db.sent[sentKey('emg',a)];return `<div class="message-recipient"><div><b>${a.time} · ${safe(p?.name||'')}</b><small>${safe(a.service)} · ${pill(a.status)}</small></div><button class="btn sm ${done?'':'primary'}" onclick="emgSend('${a.id}')">${done?'Sent ✓ (resend)':'WhatsApp'}</button></div>`}).join('')||'<div class="empty">No pending patients in this range.</div>';
+}
+function emgSend(id){
+ let a=db.appointments.find(x=>x.id===id),p=a&&patient(a.patientId);if(!p)return;
+ waOpen(p.phone,fillMessageTemplate('doctorEmergency',appointmentTemplateValues(a,p)));
+ db.sent[sentKey('emg',a)]=1;save();renderEmgList();
+}
+function emgSendNext(){let a=emgAffected().find(x=>!db.sent[sentKey('emg',x)]);if(a)emgSend(a.id);else alert('All affected patients have been informed.')}
+function emgAlertContact(){
+ let n=$('emgContact').value.replace(/\D/g,'');
+ if(n.length<10){alert('Enter the contact person’s WhatsApp number first.');return}
+ db.settings.contactPerson=n;
+ let list=emgAffected(),why=$('emgReason').value.trim(),od=getMessagingAudience('overdue').length;
+ let msg='URGENT: '+DOCTOR+' is unavailable'+(why?' ('+why+')':'')+'.\nPatients affected today: '+list.length+'\n'+
+  list.map(a=>'• '+a.time+' '+(patient(a.patientId)?.name||'')+' ('+a.service+') '+(patient(a.patientId)?.phone||'')).join('\n')+
+  '\nOverdue follow-ups: '+od+'\nPlease call the patients and arrange new slots.';
+ waOpen(n,msg);save();
+}
+function emgReschedule(){
+ let list=emgAffected();if(!list.length)return;
+ if(!confirm('Mark '+list.length+' appointment(s) as Rescheduled?'))return;
+ list.forEach(a=>a.status='Rescheduled');save();renderEmgList();
+}
+
+
+/* ===== DATE-WISE MEDICAL HISTORY ===== */
+function fmtD(d){return d?new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):''}
+function vrow(label,val,hl){return val?`<div class="vrow${hl?' hl':''}"><small>${label}</small><span>${safe(val)}</span></div>`:''}
+function visitCard(a){
+ let dx=a.diagnosis||a.notes||'',tx=a.advice||a.historyNote||'';
+ return `<div class="visit"><div class="vhead"><b>${fmtD(a.date)}</b> · ${a.time} · ${safe(a.service)} ${pill(a.status)}${a.doctorEmergency?' <span class="pill Cancelled">🚨 Doctor emergency</span>':''}</div>`+
+  (a.doctorEmergency?vrow('Doctor emergency','Doctor unavailable on '+fmtD(a.date)+'. Patient informed on WhatsApp'+(a.emergencyOn?' ('+fmtD(a.emergencyOn.slice(0,10))+', '+a.emergencyOn.slice(11)+')':'')+'. Message: '+(a.emergencyMessage||''),true):'')+vrow(a.doctorEmergency?'Reason for visit':'Case / diagnosis',dx)+vrow('Treatment & advice',tx)+vrow('Plan for next visit',a.plan,true)+(a.followup?vrow('Follow-up date',fmtD(a.followup)):'')+vrow('Cancelled because',a.status==='Cancelled'?a.reason:'')+vrow('Overdue note',a.overdueNote)+(a.doctorEmergency&&a.rescheduledFrom&&a.rescheduledFrom.slice(0,10)===a.date?'':vrow('Rescheduled from',a.rescheduledFrom))+
+  (!dx&&!tx&&!a.plan&&!a.reason&&!a.doctorEmergency?'<div class="muted small">No notes recorded for this visit.</div>':'')+`</div>`;
+}
+function visitTimeline(pid,excludeId){
+ let t=iso(today),vis=db.appointments.filter(a=>a.patientId===pid&&a.id!==excludeId&&(a.doctorEmergency||a.date<=t||a.status==='Completed')&&a.status!=='Confirmed'||(a.patientId===pid&&a.id!==excludeId&&a.status==='Confirmed'&&a.date<t)).sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+ if(!vis.length)return '<div class="empty">No previous visits. This is the first recorded case.</div>';
+ let lp=vis.find(a=>a.plan);
+ return (lp?`<div class="lastplan"><b>Plan from ${fmtD(lp.date)}:</b> ${safe(lp.plan)}</div>`:'')+`<div class="vbox">${vis.map(visitCard).join('')}</div>`;
+}
+
+/* ===== TOMORROW'S MESSAGES: one button, personal message for each patient ===== */
+function waUrl(phone,msg){let n=String(phone||'').replace(/\D/g,'');if(n.length===10)n='91'+n;return 'https://wa.me/'+n+'?text='+encodeURIComponent(msg)}
+function tomorrowList(){
+ let t=iso(plus(today,1));
+ return db.appointments.filter(a=>patient(a.patientId)&&((['Confirmed','Rescheduled'].includes(a.status)&&a.date===t)||(a.status==='Followup'&&a.followup===t)))
+  .map(a=>{let fu=a.status==='Followup';return {a,kind:fu?'Follow-up':'Appointment',time:a.time||'',reason:(a.notes||a.service||'').trim()}})
+  .sort((x,y)=>x.time.localeCompare(y.time));
+}
+function tmrKey(x){return 'tmr:'+x.a.id+':'+iso(plus(today,1))}
+function tmrMsg(x){
+ let a=x.a,p=patient(a.patientId),d=x.kind==='Follow-up'?a.followup:a.date;
+ return fillMessageTemplate('tomorrowReminder',{...appointmentTemplateValues(a,p),visit_type:x.kind==='Follow-up'?'follow-up visit':'appointment',visit_date:waDisplayDate(d),visit_time:x.time?formatTime(x.time):'the usual time',reason:x.reason||a.service});
+}
+function tmrSend(i){
+ let x=tomorrowList()[i];if(!x)return;
+ window.open(waUrl(patient(x.a.patientId).phone,tmrMsg(x)),'_blank');
+ db.sent[tmrKey(x)]=1;save();
+}
+function tmrSendAll(){
+ let L=tomorrowList().filter(x=>!db.sent[tmrKey(x)]),blocked=0;if(!L.length)return;
+ L.forEach(x=>{let w=window.open(waUrl(patient(x.a.patientId).phone,tmrMsg(x)),'_blank');if(w)db.sent[tmrKey(x)]=1;else blocked++});
+ save();
+ if(blocked)alert(blocked+' message(s) were blocked by the browser’s pop-up blocker. Allow pop-ups for this page and press the button again, or use the WhatsApp button next to each patient.');
+}
+function renderTomorrow(){
+ let el=$('tomorrow');if(!el)return;
+ let L=tomorrowList(),left=L.filter(x=>!db.sent[tmrKey(x)]).length;
+ el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="sectionhead"><div><h3>Tomorrow’s messages · ${fmtD(iso(plus(today,1)))}</h3><small>${L.length} patient${L.length===1?'':'s'} · each message has their own name, time and reason</small></div><button class="btn primary" onclick="tmrSendAll()" ${left?'':'disabled'}>${left?'Send all ('+left+')':'All sent ✓'}</button></div>`+
+ (L.map((x,i)=>{let done=db.sent[tmrKey(x)];return `<div class="message-recipient" style="margin-bottom:8px"><div><b>${safe(patient(x.a.patientId).name)}</b><small>${x.time?formatTime(x.time)+' · ':''}${x.kind} · Reason: ${safe(x.reason)}</small></div><button class="btn sm ${done?'':'primary'}" onclick="tmrSend(${i})">${done?'Sent ✓':'WhatsApp'}</button></div>`}).join('')||'<div class="empty">No appointments or follow-ups tomorrow.</div>')+
+ (L.length?`<details style="margin-top:6px"><summary class="muted small" style="cursor:pointer">Preview the first message</summary><pre style="white-space:pre-wrap;font:12px/1.5 Arial;background:#f6f9fa;border-radius:8px;padding:10px;margin:8px 0 0">${safe(tmrMsg(L[0]))}</pre></details>`:'')+
+ `<div class="muted small" style="margin-top:8px">WhatsApp opens each message ready to send. Press Send in WhatsApp. If your browser blocks the extra tabs, allow pop-ups once.</div></div>`;
+}
+
+/* ===== BROADCAST: one-tap and send-all, free manual WhatsApp ===== */
+function msgKey(x){return 'bc:'+messagingType+':'+x.appointmentId+':'+iso(today)}
+function msgSendOne(i){
+ let x=messagingBatch[i];if(!x||!x.phone)return;
+ window.open(waUrl(x.phone,x.message),'_blank');db.sent[msgKey(x)]=1;save();renderMessagingBatch();
+}
+function msgSendAll(){
+ let L=messagingBatch.map((x,i)=>i).filter(i=>messagingBatch[i].phone&&!db.sent[msgKey(messagingBatch[i])]),blocked=0;
+ if(!L.length){alert('Nothing left to send in this group.');return}
+ L.forEach(i=>{let x=messagingBatch[i],w=window.open(waUrl(x.phone,x.message),'_blank');if(w)db.sent[msgKey(x)]=1;else blocked++});
+ save();renderMessagingBatch();
+ if(blocked)alert(blocked+' message(s) were blocked by the pop-up blocker. Allow pop-ups for this page and press Send all again.');
+}
+
+/* ===== BACKUP, RESTORE, FRESH START (free, no server) ===== */
+function backupMake(){
+ let b=$('backupBox');b.value=JSON.stringify(db);b.focus();b.select();
+ let ok=false;try{ok=document.execCommand('copy')}catch(e){}
+ alert(ok?'Backup created and copied. Paste it somewhere safe.':'Backup created. Select the text in the box, copy it and keep it somewhere safe.');
+}
+function backupRestore(){
+ let t=$('backupBox').value.trim();if(!t){alert('Paste your backup text in the box first.');return}
+ let d;try{d=JSON.parse(t)}catch(e){alert('This does not look like an AURA backup.');return}
+ if(!d||!Array.isArray(d.patients)||!Array.isArray(d.appointments)){alert('This does not look like an AURA backup.');return}
+ if(!confirm('Replace all current data with this backup?'))return;
+ db=d;if(!db.sent)db.sent={};ensureSettings();save();alert('Backup restored.');
+}
+function clearDemo(){
+ if(!confirm('Delete ALL patients, appointments and feedback? Your services, slots and message templates stay.'))return;
+ if(!confirm('This cannot be undone unless you made a backup. Delete now?'))return;
+ db.patients=[];db.appointments=[];db.feedback=[];db.sent={};db.selectedDate='';save();
+}
+
+/* ===== PATIENTS TAB: sub-tabs, score cards, group messaging ===== */
+let ptTab='all';
+const PT_LABEL={all:'All',followup:'Follow-up',overdue:'Overdue',completed:'Completed',reschedule:'Doctor reschedule',cancelled:'Cancelled'};
+const PT_TPL={followup:'broadcastFollowup',overdue:'overdue',completed:'dailyCompletion',reschedule:'doctorEmergency',cancelled:'cancellation'};
+const PT_HINT={
+ all:'Every registered patient with their latest visit. Use Message to pick any saved template.',
+ followup:'Patients with a follow-up booked for today or later. Uses the “Follow-up broadcast” template.',
+ overdue:'Patients who missed a visit or follow-up. Uses the “Overdue broadcast” template.',
+ completed:'Patients whose latest visit is completed. Sends a thank-you / care message with your feedback link.',
+ reschedule:'Appointments moved because the doctor was unavailable. Uses the “Doctor emergency” template.',
+ cancelled:'Patients whose latest appointment was cancelled. Uses the “Cancellation” template to invite them to rebook.'
+};
+const ptLast=a=>a.date+a.time;
+const ptKey=(tab,a)=>'pt:'+tab+':'+a.id+':'+iso(today);
+const ptSent=(tab,a)=>!!(db.sent[ptKey(tab,a)]||(tab==='reschedule'&&db.sent[sentKey('emg',a)]));
+const ptDays=d=>Math.max(0,Math.round((new Date(iso(today))-new Date(d))/864e5));
+function ptBy(list,key,min){const m=new Map();list.forEach(a=>{const o=m.get(a.patientId);if(!o||(min?key(a)<key(o):key(a)>key(o)))m.set(a.patientId,a)});return [...m.values()]}
+function ptRows(tab){
+ const t=iso(today),A=db.appointments.filter(a=>patient(a.patientId));let L;
+ if(tab==='all')return db.patients.map(p=>({p,a:ptBy(A.filter(x=>x.patientId===p.id),ptLast,false)[0]||null})).sort((x,y)=>x.p.name.localeCompare(y.p.name));
+ if(tab==='followup')L=ptBy(A.filter(a=>a.status==='Followup'&&(!a.followup||a.followup>=t)),a=>a.followup||'9',true);
+ else if(tab==='overdue')L=getMessagingAudience('overdue');
+ else if(tab==='completed')L=ptBy(A.filter(a=>a.status==='Completed'),ptLast,false);
+ else if(tab==='reschedule')L=ptBy(A.filter(a=>a.status==='Rescheduled'&&a.doctorEmergency),ptLast,false);
+ else L=ptBy(A.filter(a=>a.status==='Cancelled'),ptLast,false);
+ const k=a=>tab==='followup'?(a.followup||'9'):tab==='overdue'?(a.followup||a.date):ptLast(a),asc=tab==='followup'||tab==='overdue';
+ return L.map(a=>({p:patient(a.patientId),a})).sort((x,y)=>asc?k(x.a).localeCompare(k(y.a)):k(y.a).localeCompare(k(x.a)));
+}
+function ptView(){const q=($('ptSearch').value||'').toLowerCase();return ptRows(ptTab).filter(r=>(r.p.name+r.p.phone+r.p.id).toLowerCase().includes(q))}
+function ptMsg(tab,a,p){return fillMessageTemplate(PT_TPL[tab]||'custom',appointmentTemplateValues(a,p))}
+function ptCards(tab,rows){
+ const t=iso(today),mk=t.slice(0,7),n=rows.length,A=rows.map(r=>r.a),c=f=>A.filter(f).length;
+ const sent=tab==='all'?0:rows.filter(r=>ptSent(tab,r.a)).length,wk=iso(plus(today,7));
+ if(tab==='all')return [['Total patients',n,'Registered in AURA'],['New this month',db.patients.filter(p=>(p.created||'').slice(0,7)===mk).length,'Registered this month'],['Returning',db.patients.filter(p=>db.appointments.filter(a=>a.patientId===p.id).length>1).length,'2 or more visits'],['No visit yet',rows.filter(r=>!r.a).length,'Registered, never booked']];
+ if(tab==='followup')return [['Follow-up patients',n,'Booked from today onward'],['Due today',c(a=>a.followup===t),'Contact today'],['Next 7 days',c(a=>a.followup>t&&a.followup<=wk),'Coming up soon'],['Later',c(a=>!a.followup||a.followup>wk),'After 7 days or no date']];
+ if(tab==='overdue'){const d=A.map(a=>ptDays(a.followup||a.date));return [['Overdue patients',n,'Missed visit or follow-up'],['Average delay',(n?Math.round(d.reduce((s,x)=>s+x,0)/n):0)+' days','Since due date'],['Longest overdue',Math.max(0,...d)+' days','Chase first'],['To message today',n-sent,sent+' already messaged']]}
+ if(tab==='completed'){const f=(db.feedback||[]).filter(x=>A.some(a=>a.id===x.appointmentId));return [['Completed patients',n,'Latest visit completed'],['Completed today',c(a=>a.date===t),'Thank-you messages due'],['This month',c(a=>a.date.slice(0,7)===mk),'Completed visits'],['Average rating',f.length?(f.reduce((s,x)=>s+(+x.rating||0),0)/f.length).toFixed(1)+' ★':'—',f.length+' review(s)']]}
+ if(tab==='reschedule')return [['Doctor reschedules',n,'Patients affected'],['Today',c(a=>a.date===t),'Appointments today'],['Informed',sent,'Messaged today'],['Still to inform',n-sent,'Send message']];
+ return [['Cancelled patients',n,'Latest cancellation'],['This month',c(a=>a.date.slice(0,7)===mk),'Cancelled this month'],['Messaged today',sent,'WhatsApp opened'],['To message today',n-sent,'Invite to rebook']];
+}
+function ptSet(t){ptTab=t;renderPatientsTab()}
+function renderPatientsTab(){
+ if(!$('ptCards'))return;
+ $('ptTabs').innerHTML=Object.keys(PT_LABEL).map(k=>`<button class="${k===ptTab?'active':''}" onclick="ptSet('${k}')">${PT_LABEL[k]}<b>${ptRows(k).length}</b></button>`).join('');
+ $('ptCards').innerHTML=ptCards(ptTab,ptRows(ptTab)).map(x=>`<div class="card"><div class="statlabel">${x[0]}</div><div class="statnum">${x[1]}</div><div class="statfoot">${x[2]}</div></div>`).join('');
+ const view=ptView(),bulk=ptTab!=='all',pending=bulk?view.filter(r=>!ptSent(ptTab,r.a)).length:0;
+ $('ptTitle').textContent=PT_LABEL[ptTab]+' patients';
+ $('ptSub').textContent=view.length+' patient'+(view.length===1?'':'s')+(bulk?' · '+pending+' to message today':'');
+ $('ptAll').style.display=bulk?'':'none';$('ptAll').textContent='Send all pending ('+pending+')';$('ptAll').disabled=!pending;
+ $('ptHint').textContent=PT_HINT[ptTab]+(ptTab==='completed'&&!db.settings.feedbackLink?' Tip: add your feedback link in the Messaging tab so it appears in the message.':'');
+ $('ptRows').innerHTML=view.map(r=>{
+  const p=r.p,a=r.a;let d='';
+  if(ptTab==='all')d=db.appointments.filter(x=>x.patientId===p.id).length+' visit(s)';
+  else if(ptTab==='followup')d=a.followup?'Follow-up '+fmtD(a.followup):'Follow-up date not set';
+  else if(ptTab==='overdue')d='Due '+fmtD(a.followup||a.date)+' · '+ptDays(a.followup||a.date)+' day(s) overdue';
+  else if(ptTab==='completed')d=a.diagnosis||'Visit completed';
+  else if(ptTab==='reschedule')d='Doctor unavailable · '+fmtD(a.date);
+  else d=a.reason||'No reason noted';
+  const msg=bulk?(ptSent(ptTab,a)?'<span class="pill Confirmed">Sent</span>':'<span class="pill Pending">Pending</span>'):'—';
+  const act=bulk?`<div class="actions"><button class="btn sm primary" onclick="ptSend('${a.id}')">WhatsApp</button><button class="btn sm" onclick="ptReview('${a.id}')">Review</button><button class="btn sm" onclick="openRecord('${a.id}')">Record</button></div>`
+   :`<div class="actions">${a?`<button class="btn sm primary" onclick="makeWhatsApp('${a.id}')">Message</button>`:''}<button class="btn sm" onclick="showHistory('${p.id}')">History</button></div>`;
+  return `<tr><td><span class="patientname">${safe(p.name)}</span><br><span class="muted small">${safe(p.id)}</span></td><td>${safe(p.phone)}</td><td>${a?fmtD(a.date)+' · '+safe(a.service):'—'}</td><td>${safe(d)}</td><td>${a?pill(a.status):'—'}</td><td>${msg}</td><td>${act}</td></tr>`;
+ }).join('')||'<tr><td colspan="7" class="empty">No patients in this group.</td></tr>';
+}
+function ptFind(id){const a=db.appointments.find(x=>x.id===id),p=a&&patient(a.patientId);if(!p)return null;if(!p.phone){alert('This patient has no phone number saved. Update the patient record first.');return null}return {a,p}}
+function ptSend(id){const r=ptFind(id);if(!r)return;waOpen(r.p.phone,ptMsg(ptTab,r.a,r.p));db.sent[ptKey(ptTab,r.a)]=1;save()}
+function ptReview(id){
+ const r=ptFind(id);if(!r)return;
+ openModal('WhatsApp · '+r.p.name,`<div class="notice">${safe(PT_LABEL[ptTab])} message. Edit if needed, then open WhatsApp and press Send.</div><div class="field"><label>Message</label><textarea id="waMessage" style="min-height:170px">${safe(ptMsg(ptTab,r.a,r.p))}</textarea></div><div class="actions"><button class="btn primary" onclick="ptSendEdited('${id}')">Open WhatsApp</button><button class="btn" onclick="closeModal()">Close</button></div>`);
+}
+function ptSendEdited(id){const r=ptFind(id);if(!r)return;waOpen(r.p.phone,$('waMessage').value);db.sent[ptKey(ptTab,r.a)]=1;closeModal();save()}
+function ptSendAll(){
+ const L=ptView().filter(r=>r.p.phone&&!ptSent(ptTab,r.a));if(!L.length)return;
+ if(!confirm('Open '+L.length+' WhatsApp draft(s) for '+PT_LABEL[ptTab]+' patients? Press Send in each WhatsApp tab.'))return;
+ let blocked=0;L.forEach(r=>{const w=window.open(waUrl(r.p.phone,ptMsg(ptTab,r.a,r.p)),'_blank');if(w)db.sent[ptKey(ptTab,r.a)]=1;else blocked++});
+ save();if(blocked)alert(blocked+' message(s) were blocked by the pop-up blocker. Allow pop-ups for this page and press Send all pending again, or use the WhatsApp button on each row.');
+}
+
+/* RENDER ALL TABS */
+function renderAll(){
+ renderOverview();renderGlance();renderPatientsTab();renderTomorrow();renderCalendar();renderPatients();renderAppointments();renderApptStats();renderAnalytics();renderManage();renderMessagingCounts();renderMessageTemplates();
+}
+renderAll();
+</script>
+</body>
+</html>

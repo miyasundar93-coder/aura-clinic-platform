@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin-prototype.html" },
+    { "source": "/doctor", "destination": "/doctor-prototype.html" },
+    { "source": "/booking", "destination": "/booking-prototype.html" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "aura-clinic-platform-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AURA Vercel + Supabase deployment starter",
+  "engines": { "node": ">=20" },
+  "dependencies": { "@supabase/supabase-js": "^2.57.0" }
+}
